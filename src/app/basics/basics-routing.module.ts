@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { BasicsComponent } from './basics.component';
 
-import {SimpleNeuroneComponent} from '../simple-neurone/simple-neurone.component';
+import {SimpleNeuroneComponent} from './simple-neurone/simple-neurone.component';
 
 const routes: Routes = [
   {
