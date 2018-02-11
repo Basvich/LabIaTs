@@ -8,6 +8,8 @@ import { HomeModule } from './home/home.module';
 import { AppComponent } from './app.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
+import {ApplesService} from './apples.service';
+
 
 
 @NgModule({
@@ -21,7 +23,7 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     AppRoutingModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-  providers: [],
+  providers: [ApplesService ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
