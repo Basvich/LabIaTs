@@ -18,7 +18,7 @@ export class ApplesService {
   private buildApples(n: number): TSampleXY[] {
     const res: TSampleXY[]=new Array(n);
     for (let i=0; i<n; i++) {
-      res[i]= {x: 0.1+ Math.random()*0.9, y: 0.1+Math.random()*0.9};
+      res[i]= {x: 0.0+ Math.random(), y: 0.0+Math.random()};
     }
     return res;
   }

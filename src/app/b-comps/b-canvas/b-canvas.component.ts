@@ -10,6 +10,8 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
   public context: CanvasRenderingContext2D;
   public scaleX: number;
   public scaleY: number;
+  public widthPx: number;
+  public heightPx: number;
   // a reference to the canvas element from our template
   @ViewChild('idcanvas') public canvas: ElementRef;
 
@@ -39,6 +41,8 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
     try {
       this.scaleX=canvasEl.width;
       this.scaleY=canvasEl.height;
+      this.heightPx=canvasEl.height;
+      this.widthPx=canvasEl.width;
     // set the width and height
       //canvasEl.width = this.width;
       //canvasEl.height = this.height;
