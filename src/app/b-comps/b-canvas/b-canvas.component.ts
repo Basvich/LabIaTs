@@ -39,10 +39,20 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
       //this.context.translate(canvasEl.width / 2, canvasEl.height / 2);
     //return;
     try {
+<<<<<<< HEAD
       this.scaleX=1;//canvasEl.width;
       this.scaleY=1;//canvasEl.height;
       this.heightPx=canvasEl.height;
       this.widthPx=canvasEl.width;
+=======
+      this.scaleX=canvasEl.width;
+      this.scaleY=canvasEl.height;
+      this.heightPx=canvasEl.height;
+      this.widthPx=canvasEl.width;
+    // set the width and height
+      //canvasEl.width = this.width;
+      //canvasEl.height = this.height;
+>>>>>>> origin/develop
     }catch (error) {
       console.error(error);
     }
