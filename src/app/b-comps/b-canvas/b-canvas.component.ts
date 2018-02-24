@@ -2,14 +2,16 @@ import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, Input } from '
 
 @Component({
   selector: 'app-b-canvas',
-  template: '<canvas #idcanvas></canvas>',
-  styles: ['canvas { border: 1px solid #000; }']
+  template: '<canvas #idcanvas ></canvas>',
+  styles: ['canvas { border: 1px solid #000; width: 100%;  height: 100%}']
 })
 export class BCanvasComponent implements OnInit, AfterViewInit  {
 
   public context: CanvasRenderingContext2D;
   public scaleX: number;
   public scaleY: number;
+  public widthPx: number;
+  public heightPx: number;
   // a reference to the canvas element from our template
   @ViewChild('idcanvas') public canvas: ElementRef;
 
@@ -37,11 +39,10 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
       //this.context.translate(canvasEl.width / 2, canvasEl.height / 2);
     //return;
     try {
-      this.scaleX=canvasEl.width;
-      this.scaleY=canvasEl.height;
-    // set the width and height
-      //canvasEl.width = this.width;
-      //canvasEl.height = this.height;
+      this.scaleX=1;//canvasEl.width;
+      this.scaleY=1;//canvasEl.height;
+      this.heightPx=canvasEl.height;
+      this.widthPx=canvasEl.width;
     }catch (error) {
       console.error(error);
     }
@@ -55,8 +56,6 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
      this.context.beginPath();
      this.context.arc(x2, y2, 2, 0, Math.PI);
      this.context.stroke();
-    // this.context.
-    // let nx=this.canvasEl.
   }
 
 }

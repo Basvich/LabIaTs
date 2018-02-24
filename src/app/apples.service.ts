@@ -6,7 +6,7 @@ import { SAMPLE1 } from './mock-data';
 
 @Injectable()
 export class ApplesService {
-
+  private scale=100;
   constructor() { }
 
   public getApples(n: number): Observable<TSampleXY[]> {
@@ -18,8 +18,15 @@ export class ApplesService {
   private buildApples(n: number): TSampleXY[] {
     const res: TSampleXY[]=new Array(n);
     for (let i=0; i<n; i++) {
-      res[i]= {x: 0.1+ Math.random()*0.9, y: 0.1+Math.random()*0.9};
+      res[i]= {x: 0.0+ this.scale* Math.random(), y: 0.0+this.scale *Math.random()};
     }
+    /*let i=0;
+    for(let x=0.2;x<=0.8;x+=0.2){
+      for(let y=0.25; y<=0.75; y+=0.25){
+        res[i]={x:x, y:y};
+        i++;
+      }
+    }*/
     return res;
   }
 

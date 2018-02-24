@@ -1,22 +1,31 @@
-
 <div class="container">
   <div class="row">
-    <div class="col">
-      <div class="row">
-      <!--<canvas id="canvas" style="border: 1px gray solid; float: left"></canvas>-->
-      <app-b-canvas width="200px" height="200px"></app-b-canvas>
-    </div>
-      <div class="row">
-      <li *ngFor="let sample of data">
+    <div class="col border">
+      <div class="row border">
+        <!--<canvas id="canvas" style="border: 1px gray solid; float: left"></canvas>-->
+        <app-b-canvas style="height: 100%"></app-b-canvas>
+      </div>
+      <!-- <div class="row">
+        <li *ngFor="let sample of data">
         <span>{{sample.x}}</span>
       </li>
+      </div>-->
     </div>
-    </div>
-    <div class="col">
-      <button type="button" class="btn btn-primary">Fill samples</button>
-      <br/>
-      <button type="button" class="btn btn-primary" (click)="onTest1()">test2</button>
-      <app-tc2></app-tc2>
+    <div class="col border">
+      <div class="row">
+
+      </div>
+      <div class="row">
+
+        <button type="button" class="btn btn-primary" (click)="onTest1()">test2</button>
+        <br/>
+        <button type="button" class="btn" (click)="onDrawbackground()">show regions</button>
+        <br/>
+        <button type="button" class="btn" (click)="onLearnStep()">learnStep</button>
+        <br/>
+        <span>Error:{{currentError | number}}</span>
+
+      </div>
     </div>
   </div>
 </div>
