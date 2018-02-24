@@ -46,18 +46,13 @@ export class TNeuron {
 }
 
 /**
-<<<<<<< HEAD
  * Funcion de transferencia escalon (no continua)
-=======
- * Funcion de transferencia escalon
->>>>>>> origin/develop
  * @param {number} a
  * @returns {number}
  */
 function tranferStep(a: number): number {
   return (a<0)?-1: 1;
 }
-<<<<<<< HEAD
 
 
 /** Funcion de transferencia con ligera
@@ -71,5 +66,3 @@ function transferStep2(a:number):number{
   if(a>0.5) return  1;
   return  (2*a);
 }
-=======
->>>>>>> origin/develop
