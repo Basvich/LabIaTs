@@ -1,5 +1,6 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
 import {BCompsModule} from '../b-comps/b-comps.module';
 
@@ -12,6 +13,7 @@ import { Tc2Component } from '../b-comps/tc2/tc2.component';
 @NgModule({
   imports: [
     CommonModule,
+    NgbModule,
     BCompsModule,
     BasicsRoutingModule
   ],
