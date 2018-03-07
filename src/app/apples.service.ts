@@ -6,7 +6,7 @@ import { SAMPLE1 } from './mock-data';
 
 @Injectable()
 export class ApplesService {
-  private scale=100;
+  private scale=1;
   constructor() { }
 
   public getApples(n: number): Observable<TSampleXY[]> {

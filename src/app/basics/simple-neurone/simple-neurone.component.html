@@ -13,15 +13,40 @@
     </div>
     <div class="col border">
       <div class="row">
+        Funcion:
+        <!--<div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+          <label ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" [value]="1" (click)="onSelectFn(1)"> Simple step
+          </label>
+          <label ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" value="middle"  (click)="onSelectFn(2)"> pand step
+          </label>
+        </div>-->
+         <!--<div>
+         <li *ngFor="let fun of functionsType">
+            {{ fun.nfo }}
+          </li>
+        </div>-->
+        <div>
+          <!--<label *ngFor="let fun of functionsType">
+             <input ngbButton type="radio" [value]="1" (click)="onSelectFn(1)"> eoo {{fun.nfo}}
+          </label>-->
 
+        </div>
+      </div>
+      <div class="row border">
+        <ng-container *ngFor="let fun of functionsType; let idx = index; let first = first">
+          <label ngbTooltip="Reaa" >
+            <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectFn(idx)">{{fun.nfo}}
+          </label>
+        </ng-container>
       </div>
       <div class="row">
-
         <button type="button" class="btn btn-primary" (click)="onTest1()">test2</button>
         <br/>
         <button type="button" class="btn" (click)="onDrawbackground()">show regions</button>
         <br/>
-        <button type="button" class="btn" (click)="onLearnStep()">learnStep</button>
+        <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
         <br/>
         <span>Error:{{currentError | number}}</span>
 

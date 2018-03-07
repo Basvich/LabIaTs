@@ -66,3 +66,5 @@ function transferStep2(a:number):number{
   if(a>0.5) return  1;
   return  (2*a);
 }
+
+export let FuncsTransfer=[{f:tranferStep, nfo:'Simple Step'},{f:transferStep2, nfo:'Slope step'}];
