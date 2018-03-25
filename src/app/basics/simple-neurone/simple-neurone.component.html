@@ -13,20 +13,10 @@
     </div>
     <div class="col border">
       <div class="row">
-        Funcion:
-        <!--<div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
-          <label ngbButtonLabel class="btn-primary">
-            <input ngbButton type="radio" [value]="1" (click)="onSelectFn(1)"> Simple step
-          </label>
-          <label ngbButtonLabel class="btn-primary">
-            <input ngbButton type="radio" value="middle"  (click)="onSelectFn(2)"> pand step
-          </label>
-        </div>-->
-         <!--<div>
-         <li *ngFor="let fun of functionsType">
-            {{ fun.nfo }}
-          </li>
-        </div>-->
+        <button class="btn" (click)="onReset()">reset</button>
+      </div>
+      <div class="row">
+        Funcion:       
         <div>
           <!--<label *ngFor="let fun of functionsType">
              <input ngbButton type="radio" [value]="1" (click)="onSelectFn(1)"> eoo {{fun.nfo}}

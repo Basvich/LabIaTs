@@ -53,6 +53,12 @@ export class SimpleNeuroneComponent implements OnInit {
     this.neu1.transf=nFunc;
   }
 
+  public onReset(){
+    this.neu1.initRnd();
+    this.getHeroes();
+
+  }
+
   public onDrawbackground() {
     const imgData = this.bCanvas.context.createImageData(
       this.bCanvas.widthPx,
@@ -243,5 +249,6 @@ export class SimpleNeuroneComponent implements OnInit {
   public clasify(apple: TSampleXY): number {
     //return (apple.y > apple.x) ? 1 : -1;
     return (apple.y >0.4) ? 1 : -1;
+    //return (apple.y > (0.5-0.5*apple.x))?1:-1;
   }
 }

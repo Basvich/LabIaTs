@@ -1,3 +1,5 @@
+import { randomBytes } from "crypto";
+
 //import { NOTIMP } from "dns";
 
 
@@ -40,7 +42,12 @@ export class TNeuron {
     for(let i=0; i<this.inputs.length; i++){
       this.weigths[i]+=e*p[i];
     }
-    this.bias=this.bias+e;
+    this.bias=this.bias+e*1;
+  }
+
+  public initRnd(){
+    if(this.weigths) this.weigths.forEach((value:number,index:number,array:number[])=>{array[index]=Math.random()*2-1;});
+    this.bias=0;
   }
 
 }
