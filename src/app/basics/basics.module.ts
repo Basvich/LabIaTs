@@ -8,6 +8,7 @@ import { BasicsComponent } from './basics.component';
 import { BasicsRoutingModule } from './basics-routing.module';
 import { SimpleNeuroneComponent } from './simple-neurone/simple-neurone.component';
 import { Tc2Component } from '../b-comps/tc2/tc2.component';
+import { DoubleNeuroneComponent } from './double-neurone/double-neurone.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { Tc2Component } from '../b-comps/tc2/tc2.component';
   ],
   declarations: [
     BasicsComponent,
-    SimpleNeuroneComponent
+    SimpleNeuroneComponent,
+    DoubleNeuroneComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
