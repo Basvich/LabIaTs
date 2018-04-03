@@ -1,3 +1,13 @@
-<p>
-  double-neurone works!
-</p>
+<div class="container">
+  <div class="row">
+    <div class="col border">
+      <app-b-canvas style="height: 100%"></app-b-canvas>
+
+    </div>
+    <div class="col border">
+      <div class="row" >
+          <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
+      </div>
+    </div>
+  </div>
+</div>
