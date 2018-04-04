@@ -25,6 +25,12 @@ export class TNeuron {
     this.buildFrom(ins);
   }
 
+  public toString(){
+    let res=`weights:[${this.weigths[0]},${this.weigths[1]}],${this.bias} `;
+    res+=`inputs:[${this.funcGetIns(this.inputs[0])},${this.funcGetIns(this.inputs[1])}] y=${this.y}`;
+    return res;
+  }
+
   protected sumFromNumbers(ins:Array<number>):number{
      let res=0;
      for(let i=0;i<this.inputs.length;i++){
@@ -78,8 +84,8 @@ export class TNeuron {
     }*/
     res=this.funcSum();
     res += this.bias;
-    this.y=res;
-    return this.transf(res);
+    this.y=this.transf(res);
+    return this.y;
   }
 
   public showInfo(): string {
@@ -171,9 +177,11 @@ export class TPerceptron1 extends TNeuronalNetwork {
 
     this.layer.forEach(function(value: TNeuron) {
       value.calc();
+      //console.log(value.toString());
     });
     //Finalmente la neurona de salida
     const y=this.neuY.calc();
+    //console.log(this.neuY.toString());
     return y;
   }
 
@@ -184,9 +192,11 @@ export class TPerceptron1 extends TNeuronalNetwork {
     for (let i = 0; i < nNeurons; i++) {
       const n = new TNeuron(null);
       n.buildFrom(this.inputs);
+      n.transf=tranferStep0;
       this.layer[i] = n;
     }
     this.neuY = new TNeuron(this.layer);
+    this.neuY.transf=tranferStep0;
 
   }
 
@@ -223,6 +233,10 @@ function tranferStep(a: number): number {
   return a < 0 ? -1 : 1;
 }
 
+function tranferStep0(a: number): number {
+  return a < 0 ? 0 : 1;
+}
+
 /** Funcion de transferencia con ligera
  * pendiente (continua)
  *
@@ -236,7 +250,7 @@ function transferStep2(a: number): number {
 }
 
 /**
- *
+ * Devuelve valores entre [0,1]
  * Su derivada
  * f1'(x)=f1(x)(1-f1(x));
  * @param {number} a
@@ -249,7 +263,7 @@ function transferSigmoid(a:number){
   return 1/c;
 }
 
-/** tangente hiperbolica (=sigmoide escalada)
+/** tangente hiperbolica (=sigmoide escalada). Devuelve entre [-1,1]
  * f2'(x)=2f1(x)(1-f1(x))=2f1'(x)
  * @param {number} a
  * @returns {number}

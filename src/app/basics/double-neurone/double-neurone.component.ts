@@ -24,7 +24,7 @@ export class DoubleNeuroneComponent implements OnInit {
   ngOnInit() {
     this.getHeroes();
     this.perceptronNet=new TPerceptron1();
-    this.perceptronNet.build(2,4);
+    this.perceptronNet.build(2,2);
   }
 
   getHeroes(): void {
@@ -39,6 +39,7 @@ export class DoubleNeuroneComponent implements OnInit {
     const din = [elemento.x, elemento.y];
     const desired=thats.clasify(elemento);
     this.perceptronNet.learn(desired, din);
+    this.forceValues();
    /*  //Recorremos todos los samples
     thats.neu1.inputs[0] = elemento.x;
     thats.neu1.inputs[1] = elemento.y;
@@ -57,6 +58,24 @@ export class DoubleNeuroneComponent implements OnInit {
     this.drawSamples();
     //this.currentError=this.calcError2();
   }
+
+  public onTest(){
+    const thats=this;
+    function test(a:number[]){
+
+      thats.perceptronNet.inputs[0]=a[0];
+      thats.perceptronNet.inputs[1]=a[1];
+      thats.forceValues();
+      thats.perceptronNet.calcY();
+      console.log(`test[${a[0]},${a[1]}] -> ${thats.perceptronNet.neuY.y}`);
+    }
+    test([0.0,0.0]);
+    test([0.0,1.0]);
+    test([1.0,0.0]);
+    test([1.0,1.0]);
+  }
+
+
 
   public drawbackgroundNeu() {
     const imgData = this.bCanvas.context.createImageData(
@@ -112,6 +131,21 @@ export class DoubleNeuroneComponent implements OnInit {
     this.bCanvas.context.fill();
     this.bCanvas.context.strokeStyle= 'black';
     this.bCanvas.context.stroke();
+  }
+
+  protected forceValues(){
+    let neu=this.perceptronNet.layer[0];
+    neu.weigths[0]=1;
+    neu.weigths[1]=1;
+    neu.bias=-1.5;
+    neu=this.perceptronNet.layer[1];
+    neu.weigths[0]=1;
+    neu.weigths[1]=1;
+    neu.bias=-0.5;
+    neu=this.perceptronNet.neuY;
+    neu.weigths[0]=-2;
+    neu.weigths[1]=1;
+    neu.bias=-0.5;
   }
 
 
