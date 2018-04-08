@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 
-//import { SAMPLE1 } from '../../mock-data';
 import { TSampleXY } from '../../dataTypes';
 import { ApplesService } from '../../apples.service';
 import { BCanvasComponent } from '../../b-comps/b-canvas/b-canvas.component';
@@ -19,7 +18,7 @@ import { element } from 'protractor';
 })
 export class SimpleNeuroneComponent implements OnInit {
   private lastIndex=0;
-
+  public currentInput=[0,0];
   public data: TSampleXY[];
   public neu1: TNeuron;
   public currentError=0;
@@ -32,17 +31,18 @@ export class SimpleNeuroneComponent implements OnInit {
 
   ngOnInit() {
     this.getHeroes();
-    this.neu1 = new TNeuron(2);
+    this.neu1 = new TNeuron(null);
+    this.neu1.buildFrom(this.currentInput);
   }
 
   public onTest1() {
     console.log('onTest1()');
     console.log(this.bCanvas.width);
     this.drawSamples();
-    const n1 = new TNeuron(1);
-    n1.a = 1;
+    /*const n1 = new TNeuron(null);
+    n1.buildFrom(this.currentInput);
     n1.bias = 2;
-    console.log(n1.calc());
+    console.log(n1.calc());*/
   }
 
   public onSelectFn(f){
@@ -56,7 +56,6 @@ export class SimpleNeuroneComponent implements OnInit {
   public onReset(){
     this.neu1.initRnd();
     this.getHeroes();
-
   }
 
   public onDrawbackground() {
@@ -125,7 +124,7 @@ export class SimpleNeuroneComponent implements OnInit {
       this.neu1.inputs[1] = y*isy;
       for (let x = 0; x < imgData.width; x++) {
         this.neu1.inputs[0] = x*isx;
-        const rC = this.neu1.calc2();
+        const rC = this.neu1.calc();
         if (rC < -0.5) {
           v.setInt32(index, red);
         } else {
@@ -151,23 +150,20 @@ export class SimpleNeuroneComponent implements OnInit {
       const color= (thats.clasify(value)>0)?'blue':'red';
       thats.drawSample(value,color);
     });
-    const n1 = new TNeuron(1);
-    n1.a = 1;
-    n1.bias = 2;
-    console.log(n1.calc());
+
   }
 
   public onLearnStep() {
     const thats = this;
     const din = [0, 0];
-    const index = Math.floor(Math.random() * this.data.length);
+    const index = (this.lastIndex++) % this.data.length;// Math.floor(Math.random() * this.data.length);
     const elemento: TSampleXY = this.data[index];
     //Recorremos todos los samples
     thats.neu1.inputs[0] = elemento.x;
     thats.neu1.inputs[1] = elemento.y;
-    const rC = thats.neu1.calc2();
+    const rC = thats.neu1.calc();
     const rOk = thats.clasify(elemento);
-    let e = rOk - rC; //rC-rOk; //
+    let e = rOk - rC;
     e=e*0.5;
     console.log(`(${elemento.x.toFixed(2)}, ${elemento.y.toFixed(2)}) rC:${rC} rOk:${rOk}`);
     if (e !== 0) {
@@ -233,7 +229,7 @@ export class SimpleNeuroneComponent implements OnInit {
     this.data.forEach(s => {
       thats.neu1.inputs[0] = s.x;
       thats.neu1.inputs[1] = s.y;
-      const rCalc=thats.neu1.calc2();
+      const rCalc=thats.neu1.calc();
       const rTeor=thats.clasify(s);
       n++;
       res+=(rTeor-rCalc)*(rTeor-rCalc);
