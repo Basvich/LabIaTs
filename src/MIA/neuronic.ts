@@ -26,8 +26,8 @@ export class TNeuron {
   }
 
   public toString(){
-    let res=`weights:[${this.weigths[0]},${this.weigths[1]}],${this.bias} `;
-    res+=`inputs:[${this.funcGetIns(this.inputs[0])},${this.funcGetIns(this.inputs[1])}] y=${this.y}`;
+    let res=`w: [${this.weigths[0].toFixed(2)},${this.weigths[1].toFixed(2)}],${this.bias.toFixed(2)} `;
+    res+=`in: [${this.funcGetIns(this.inputs[0]).toFixed(2)},${this.funcGetIns(this.inputs[1]).toFixed(2)}] y=${this.y.toFixed(2)}`;
     return res;
   }
 
@@ -89,20 +89,8 @@ export class TNeuron {
   }
 
   public showInfo(): string {
-    return `[${this.weigths[0].toFixed(2)},${this.weigths[1].toFixed(
-      2
-    )}] bias:${this.bias.toFixed(2)}`;
+    return `[${this.weigths[0].toFixed(2)},${this.weigths[1].toFixed(2)}] bias:${this.bias.toFixed(2)}`;
   }
-
-  /*public calc2(): number{
-    const f=this.inputs.length;
-    let res=0;
-    for(let i= 0; i<f; i++){
-      res+=this.inputs[i]*this.weigths[i];
-    }
-    res+=this.bias;
-    return this.transf(res);
-  }*/
 
   /** Ajuste simple para un perceptron
    * @param {number} e
@@ -117,11 +105,13 @@ export class TNeuron {
   }
 
   public adjustBackProp(lek:number){
+    if(lek===0) return;
     if(!isFinite(lek)){
       throw new Error('Invalid lek');
     }
     for(let i=0;i<this.inputs.length;i++){
-      const nW=this.weigths[i]+lek*this.funcGetIns(this.inputs[i]);
+      const vari=lek*this.funcGetIns(this.inputs[i]);
+      const nW=this.weigths[i]+vari;
       this.weigths[i]=nW;
       if(isNaN(this.weigths[i])){
         throw new Error('Invalid operation');
@@ -149,6 +139,7 @@ export class TNeuron {
 
 export class TNeuronalNetwork {
   public tasaAprendizage=0.3;
+  public showInfo(){}
 }
 
 /** Red neuronal perceptron, con 2 capas (entradas y una neurona de salida)
@@ -161,6 +152,7 @@ export class TNeuronalNetwork {
 export class TPerceptron1 extends TNeuronalNetwork {
   inputs: Array<number>;
   layer: Array<TNeuron>;
+  derivative:Function;
   /** La neurona de salida, conectada a todas las de entrada
    * @type {TNeuron}
    * @memberof TPerceptron1
@@ -172,8 +164,9 @@ export class TPerceptron1 extends TNeuronalNetwork {
    * @returns {number}
    * @memberof TPerceptron1
    */
-  public calcY(): number {
+  public calcY(currInputs?:Array<number>): number {
     if (!this.inputs) throw new Error('Not initialized');
+    if(currInputs) for(let i=0;i<currInputs.length;i++) this.inputs[i]=currInputs[i];
 
     this.layer.forEach(function(value: TNeuron) {
       value.calc();
@@ -186,17 +179,19 @@ export class TPerceptron1 extends TNeuronalNetwork {
   }
 
   public build(nImputs: number, nNeurons: number) {
+    const func=transferSigmoid;
+    this.derivative=sigmoidDer;
     this.inputs = new Array(nImputs);
     for(let i=0;i<this.inputs.length;i++) this.inputs[i]=0;
     this.layer = new Array(nNeurons);
     for (let i = 0; i < nNeurons; i++) {
       const n = new TNeuron(null);
       n.buildFrom(this.inputs);
-      n.transf=tranferStep0;
+      n.transf=func;//tranferStep0;
       this.layer[i] = n;
     }
     this.neuY = new TNeuron(this.layer);
-    this.neuY.transf=tranferStep0;
+    this.neuY.transf=func;//tranferStep0;
 
   }
 
@@ -209,18 +204,24 @@ export class TPerceptron1 extends TNeuronalNetwork {
     for(let i=0;i<currInputs.length;i++) this.inputs[i]=currInputs[i];
     this.calcY();  //Calculamos el resultado de la red
     const error=desired-this.neuY.y;  //El error
-    //Cambio pesos neurona de salida. El 2 es por usar la funcion tanh
+
+    //Cambio pesos neurona de salida.
     //Dk=error*g'(salida)
-    const Ek=error*2*this.neuY.y*(1-this.neuY.y);
+    const Ek=error*this.derivative(this.neuY.y); //error*this.neuY.y*(1-this.neuY.y);
+    //console.log(`current error:${error.toFixed(2)} Ek:${Ek.toFixed(2)}`);
     const lek=this.tasaAprendizage*Ek;
     this.neuY.adjustBackProp(lek);  //Cambio pesos neurona salida
    //Cambio pesos capa interna (=entrada aqui)
     for(let i=0;i<this.layer.length;i++){
       const neu:TNeuron=this.layer[i];
-      const Eki=2*neu.y*(1-neu.y)*this.neuY.weigths[i]*Ek;
+      const Eki=this.derivative(neu.y)*this.neuY.weigths[i]*Ek; //neu.y*(1-neu.y)*this.neuY.weigths[i]*Ek;
       neu.adjustBackProp(this.tasaAprendizage*Eki);
     }
+  }
 
+  public showInfo(){
+    console.log(`in: [${this.inputs[0]}, ${this.inputs[1]}] layer ${this.layer[0].toString()} ${this.layer[1].toString()}`);
+    console.log(`out: ${this.neuY.toString()}`);
   }
 }
 
@@ -263,6 +264,10 @@ function transferSigmoid(a:number){
   return 1/c;
 }
 
+function sigmoidDer(a:number){
+  return a*(1-a);//(1-transferSigmoid(a));
+}
+
 /** tangente hiperbolica (=sigmoide escalada). Devuelve entre [-1,1]
  * f2'(x)=2f1(x)(1-f1(x))=2f1'(x)
  * @param {number} a
@@ -271,6 +276,11 @@ function transferSigmoid(a:number){
 function transferTanh(a: number): number {
   //=(2/(1+e^-2x))-1=(1-e^-x)/(1+e^-x)
   return Math.tanh(a);
+}
+
+function tanhDer(a:number){
+  const b=Math.tanh(a);
+  return (1-a*a);
 }
 
 function transferRelu(a: number): number {
