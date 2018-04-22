@@ -1,31 +1,37 @@
 // Creado con ng generate component basics\doubleNeurone
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 
-import { TSampleXY } from '../../dataTypes';
-import { ApplesService } from '../../apples.service';
-import { BCanvasComponent } from '../../b-comps/b-canvas/b-canvas.component';
-import { TNeuron, TPerceptron1, FuncsTransfer } from '../../../MIA/neuronic';
+import { TSampleXY } from "../../dataTypes";
+import { ApplesService } from "../../apples.service";
+import { BCanvasComponent } from "../../b-comps/b-canvas/b-canvas.component";
+import { TNeuron, TPerceptron1, FuncsTransfer } from "../../../MIA/neuronic";
+
+import { Chart } from "chart.js";
 
 @Component({
-  selector: 'app-double-neurone',
-  templateUrl: './double-neurone.component.html',
-  styleUrls: ['./double-neurone.component.css']
+  selector: "app-double-neurone",
+  templateUrl: "./double-neurone.component.html",
+  styleUrls: ["./double-neurone.component.css"]
 })
 export class DoubleNeuroneComponent implements OnInit {
   private lastIndex = 0;
   public data: TSampleXY[];
+  public chart; // This will hold our chart info
   public perceptronNet: TPerceptron1;
   public currentError = 0;
-  public numEpoch=0;
+  public numEpoch = 0;
 
   @ViewChild(BCanvasComponent) bCanvas: BCanvasComponent;
 
-  constructor(private appleService: ApplesService) {}
+  constructor(private appleService: ApplesService) {
+    console.log("new");
+  }
 
   ngOnInit() {
     this.getHeroes();
     this.perceptronNet = new TPerceptron1();
     this.perceptronNet.build(2, 2);
+    this.initChart();
   }
 
   getHeroes(): void {
@@ -74,7 +80,7 @@ export class DoubleNeuroneComponent implements OnInit {
 
   public onLearnStepX100() {
     const thats = this;
-    const nTest=400;
+    const nTest = 400;
     for (let i = 0; i < nTest; i++) {
       const index = this.lastIndex++ % this.data.length;
       const elemento: TSampleXY = this.data[index];
@@ -82,18 +88,23 @@ export class DoubleNeuroneComponent implements OnInit {
       const desired = thats.clasify(elemento);
       this.perceptronNet.learn(desired, din);
     }
-    this.numEpoch+=nTest;
+    this.numEpoch += nTest;
     //console.log(`in [${din[0].toFixed(2)}, ${din[1].toFixed(2 )}] desired:${desired.toFixed(2)}` );
     this.perceptronNet.showInfo();
 
     this.drawbackgroundNeu();
     this.drawSamples();
     this.currentError = this.calcError2();
+    const nsam={x:this.numEpoch,y:this.currentError};
+    this.chart.data.datasets[0].data.push(nsam);
+    this.chart.update();
   }
 
   public onTest() {
     const thats = this;
-    function test(a: number[]) {
+    this.testAddDataChart();
+    return;
+    /*  function test(a: number[]) {
       thats.perceptronNet.inputs[0] = a[0];
       thats.perceptronNet.inputs[1] = a[1];
       thats.forceValues3();
@@ -103,7 +114,7 @@ export class DoubleNeuroneComponent implements OnInit {
     test([0.05, 0.1]);
     thats.perceptronNet.showInfo();
     const desired = 0.01;
-    this.perceptronNet.learn(desired, [0.05, 0.1]);
+    this.perceptronNet.learn(desired, [0.05, 0.1]); */
 
     /* test([0.0,1.0]);
     thats.perceptronNet.showInfo();
@@ -119,10 +130,10 @@ export class DoubleNeuroneComponent implements OnInit {
       this.bCanvas.heightPx
     );
     const v: DataView = new DataView(imgData.data.buffer);
-    const red = parseInt('FF0000FF', 16);
-    const blue = parseInt('00FFFFFF', 16);
-    const white = parseInt('FFFFFFFF', 16);
-    const black = parseInt('101010FF', 16);
+    const red = parseInt("FF0000FF", 16);
+    const blue = parseInt("00FFFFFF", 16);
+    const white = parseInt("FFFFFFFF", 16);
+    const black = parseInt("101010FF", 16);
     let index = 0;
     const isx = 1 / this.bCanvas.scaleX;
     const isy = 1 / this.bCanvas.scaleY;
@@ -154,7 +165,7 @@ export class DoubleNeuroneComponent implements OnInit {
     const thats = this;
     this.data.forEach(function(value: TSampleXY) {
       //thats.drawApple(value);
-      const color = thats.clasify(value) > 0 ? 'blue' : 'red';
+      const color = thats.clasify(value) > 0 ? "blue" : "red";
       thats.drawSample(value, color);
     });
   }
@@ -172,7 +183,7 @@ export class DoubleNeuroneComponent implements OnInit {
     );
     this.bCanvas.context.fillStyle = color;
     this.bCanvas.context.fill();
-    this.bCanvas.context.strokeStyle = 'black';
+    this.bCanvas.context.strokeStyle = "black";
     this.bCanvas.context.stroke();
   }
 
@@ -237,10 +248,51 @@ export class DoubleNeuroneComponent implements OnInit {
     return res;
   }
 
+  protected initChart() {
+    const ctx = document.getElementById("canvaschart");
+    this.chart = new Chart(ctx, {
+      type: 'scatter',
+      data: {
+        datasets: [
+          {
+            label: "test",
+            data: [],
+            fill: false
+          }
+        ]
+      },
+      options: {
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [
+            {
+              type:'linear',
+              display: true
+            }
+          ],
+          yAxes: [
+            {
+              display: true
+            }
+          ]
+        },
+        showLines:true
+      }
+    });
+  }
+
+  protected testAddDataChart() {
+    const data = [0, 1, 2, 3, 4, 5, 5, 4, 3, 2];
+    this.chart.data.datasets[0].data = data;
+    this.chart.update();
+  }
+
   //Clasifica manualmente las manzanas segun esas medidas en el tipo 0 o 1
   public clasify(apple: TSampleXY): number {
-    let b=apple.x>0.35;
-    b=b && apple.y>0.35;
+    let b = apple.x > 0.35;
+    b = b && apple.y > 0.35;
     //const b = apple.x === apple.y;
     return b ? 1 : 0;
   }
