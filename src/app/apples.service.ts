@@ -15,6 +15,11 @@ export class ApplesService {
     //return of(SAMPLE1);
   }
 
+  public getApplesXor(n:number): Observable<TSampleXY[]> {
+    const res: Array<TSampleXY>=this.builInX(n);
+    return  of(res);
+  }
+
   private buildApples(n: number): TSampleXY[] {
     const res: TSampleXY[]=new Array(n);
     for (let i=0; i<n; i++) {
@@ -27,6 +32,15 @@ export class ApplesService {
         i++;
       }
     }*/
+    return res;
+  }
+
+  private builInX(n:number):TSampleXY[]{
+    const res:TSampleXY[]=new Array(4);
+    res[0]={x:0.1,y:0.1};
+    res[1]={x:0.9,y:0.1};
+    res[2]={x:0.9,y:0.9};
+    res[3]={x:0.9,y:0.1};
     return res;
   }
 

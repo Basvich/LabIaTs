@@ -4,14 +4,34 @@
       <app-b-canvas style="height: 100%"></app-b-canvas>
     </div>
     <div class="col border">
+      <div class="row">
+          <span [hidden]="isUnchanged">changed</span>
+
+          <span>Numero de neuronas:</span><input type="text" (change)="true" #inpt1>{{netCfg.v2}}
+          <br>
+          <span>Numero de neuronas bis:</span><input type="text" [value]="netCfg.v2" (input)="netCfg.V2=$event.target.value">
+          <br>
+          <span>Numero de neuronas tris:</span><input type="text" [(ngModel)]="netCfg.v2">
+          <br>
+          <button type="button" class="btn" (click)="onSetCfg(inpt1.value)" ngbTooltip="Set network configuration">Set</button>
+
+      </div>
+      <div class="row">
+        <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
+          <label ngbTooltip="Reaa" >
+            <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
+          </label>
+        </ng-container>
+      </div>
       <div class="row" >
           <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
-          <button type="button" class="btn" (click)="onTest()" ngbTooltip="Test">Test</button>
+          <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">Test</button>
           <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">Learn 100</button>
       </div>
       <div class="row">
           <span>numEpoch:{{numEpoch}}  Error:{{currentError | number}}</span>
       </div>
+
     </div>
   </div>
   <div class="row border">

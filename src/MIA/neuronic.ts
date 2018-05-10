@@ -1,5 +1,5 @@
-import { randomBytes } from "crypto";
-import { isNumber } from "util";
+import { randomBytes } from 'crypto';
+import { isNumber } from 'util';
 
 //import { NOTIMP } from "dns";
 
@@ -104,6 +104,9 @@ export class TNeuron {
     this.bias = this.bias + e * 1;
   }
 
+   /** Ajusta los pesos de las conexiones entrantes
+    * @param lek - Cuanto se ajusta
+    */
   public adjustBackProp(lek:number){
     if(lek===0) return;
     if(!isFinite(lek)){
@@ -219,6 +222,8 @@ export class TPerceptron1 extends TNeuronalNetwork {
     }
   }
 
+  /** Muestra una información de depuración.
+   */
   public showInfo(){
     console.log(`in: [${this.inputs[0]}, ${this.inputs[1]}] layer ${this.layer[0].toString()} ${this.layer[1].toString()}`);
     console.log(`out: ${this.neuY.toString()}`);
