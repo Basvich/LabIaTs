@@ -1,40 +1,75 @@
 <div class="container">
-  <div class="row border">
+  <div class="row border-primary">
     <div class="col border">
       <app-b-canvas style="height: 100%"></app-b-canvas>
     </div>
     <div class="col border">
       <div class="row">
-          <span [hidden]="isUnchanged">changed</span>
+        <span [hidden]="isUnchanged">changed</span>
 
-          <span>Numero de neuronas:</span><input type="text" (change)="true" #inpt1>{{netCfg.v2}}
-          <br>
-          <span>Numero de neuronas bis:</span><input type="text" [value]="netCfg.v2" (input)="netCfg.V2=$event.target.value">
-          <br>
-          <span>Numero de neuronas tris:</span><input type="text" [(ngModel)]="netCfg.v2">
-          <br>
-          <button type="button" class="btn" (click)="onSetCfg(inpt1.value)" ngbTooltip="Set network configuration">Set</button>
-
+        <span>Numero de neuronas:</span>
+        <input type="text" (change)="true" #inpt1>{{netCfg.v2}}
+        <br>
+        <span>Numero de neuronas bis:</span>
+        <input type="text" [value]="netCfg.v2" (input)="netCfg.V2=$event.target.value">
+        <br>
+        <span>Numero de neuronas tris:</span>
+        <input type="text" [(ngModel)]="netCfg.v2">
+        <br>
+        <button type="button" class="btn" (click)="onSetCfg(inpt1.value)" ngbTooltip="Set network configuration">Set</button>
       </div>
       <div class="row">
         <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
-          <label ngbTooltip="Reaa" >
+          <label ngbTooltip="Reaa">
             <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
           </label>
         </ng-container>
       </div>
-      <div class="row" >
-          <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
-          <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">Test</button>
-          <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">Learn 100</button>
+      <div class="row">
+        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+          <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
+            <label class="btn btn-secondary" ngbTooltip="Reaa">
+              <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
+            </label>
+          </ng-container>
+        </div>
       </div>
       <div class="row">
-          <span>numEpoch:{{numEpoch}}  Error:{{currentError | number}}</span>
+        <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
+        <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">Test</button>
+        <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">Learn 100</button>
+        <button type="button" class="btn" (click)="onLearnToEnd()" ngbTooltip="Learn">Learn 2 End</button>
       </div>
-
+      <div class="row">
+        <span>numEpoch:{{numEpoch}} Error:{{currentError | number}}</span>
+        <br>
+        <span>Numero de neuronas tris:</span>
+        <input type="text" [(ngModel)]="netCfg.v2">
+      </div>
+      <div class="row border">
+        <span>Condiciones fin</span>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Mínimo valor</span>
+          </div>
+          <input type="text" [(ngModel)]="netCfg.minError">
+        </div>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Maximas iteracciones</span>
+          </div>
+          <input type="text" [(ngModel)]="netCfg.maxIteracciones">
+        </div>
+      </div>
+      <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-user"></span></button>
     </div>
   </div>
   <div class="row border">
+    <div class="col-8 border">
       <canvas id="canvaschart">{{ chart }}</canvas>
+    </div>
+    <div class="col border">
+      <button type="button" class="btn" (click)="onClearGraph()" ngbTooltip="Clear all graphics">clear</button>
+    </div>
   </div>
 </div>

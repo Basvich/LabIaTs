@@ -2,54 +2,58 @@
 /**
  * Poner funciones de relleno asyncrono y detección de fin
  */
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
 
-import { TSampleXY } from '../../dataTypes';
-import { ApplesService } from '../../apples.service';
-import { BCanvasComponent } from '../../b-comps/b-canvas/b-canvas.component';
-import { TNeuron, TPerceptron1, FuncsTransfer } from '../../../MIA/neuronic';
-import * as neutils from '../../../MIA/neutils';
+import { TSampleXY } from "../../dataTypes";
+import { ApplesService } from "../../apples.service";
+import { BCanvasComponent } from "../../b-comps/b-canvas/b-canvas.component";
+import { TNeuron, TPerceptron1, FuncsTransfer } from "../../../MIA/neuronic";
+import * as neutils from "../../../MIA/neutils";
 
-import { Chart } from 'chart.js';
+import { Chart } from "chart.js";
+import { ExitMachine } from '../../../MIA/neutils';
 
-type TFClasify=(pair:TSampleXY)=>number;
+type TFClasify = (pair: TSampleXY) => number;
 
 @Component({
-  selector: 'app-double-neurone',
-  templateUrl: './double-neurone.component.html',
-  styleUrls: ['./double-neurone.component.css']
+  selector: "app-double-neurone",
+  templateUrl: "./double-neurone.component.html",
+  styleUrls: ["./double-neurone.component.css"]
 })
 export class DoubleNeuroneComponent implements OnInit {
   private lastIndex = 0;
-  protected clasify:TFClasify;
+  private currLineIndex = 0;
+  protected clasify: TFClasify;
+  protected miErrorLimit=0.002;
   public data: TSampleXY[];
   public chart; // This will hold our chart info
   public perceptronNet: TPerceptron1;
   public currentError = 0;
   public numEpoch = 0;
 
-  public isUnchanged=false;
+
+  public isUnchanged = false;
 
   public FuncsClasify = [
-    { f: this.clasify1Quart, nfo: 'Quadrant' },
-    { f: this.clasifyXor, nfo: 'Xor Function' },
-    { f:this.clasifyCenterZone, nfo:'center Zone' },
-    { f:this.clasifyBand, nfo:'band'}
+    { f: this.clasify1Quart, nfo: "Quadrant" },
+    { f: this.clasifyXor, nfo: "Xor Function" },
+    { f: this.clasifyCenterZone, nfo: "center Zone" },
+    { f: this.clasifyBand, nfo: "band" }
   ];
 
-  public netCfg={
-    nInternals:2,
-    clasify:this.FuncsClasify[0].f,
-    v2:4
+  public netCfg = {
+    nInternals: 2,
+    clasify: this.FuncsClasify[0].f,
+    v2: 4,
+    minError:0.002,
+    maxIteracciones:100000
   };
-
-
 
   @ViewChild(BCanvasComponent) bCanvas: BCanvasComponent;
 
   constructor(private appleService: ApplesService) {
-    console.log('new');
-    this.clasify=this.clasify1Quart;
+    console.log("new");
+    this.clasify = this.clasify1Quart;
   }
 
   ngOnInit() {
@@ -69,17 +73,18 @@ export class DoubleNeuroneComponent implements OnInit {
     ]; */
   }
 
-  public onSetCfg(v:any){
+  //#region  respuseta eventos
+  public onSetCfg(v: any) {
     console.log(v);
     console.log(this.netCfg.v2);
     //Sanitize
-    this.netCfg.nInternals=this.clip(this.netCfg.nInternals,1,20);
+    this.netCfg.nInternals = this.clip(this.netCfg.nInternals, 1, 20);
     this.setCfg(this.netCfg);
-
+    this.addNewLineGraph();
   }
 
-  public onSelectClasify(idx:number){
-     this.netCfg.clasify=this.FuncsClasify[idx].f;
+  public onSelectClasify(idx: number) {
+    this.netCfg.clasify = this.FuncsClasify[idx].f;
   }
 
   public onLearnStep() {
@@ -119,29 +124,48 @@ export class DoubleNeuroneComponent implements OnInit {
   public onLearnStepX100() {
     const thats = this;
     const nTest = 400;
-    for (let i = 0; i < nTest; i++) {
-      const index = this.lastIndex++ % this.data.length;
-      const elemento: TSampleXY = this.data[index];
-      const din = [elemento.x, elemento.y];
-      const desired = thats.clasify(elemento);
-      this.perceptronNet.learn(desired, din);
-    }
-    this.numEpoch += nTest;
+    this.executeLearnCicles(nTest);
+
     //console.log(`in [${din[0].toFixed(2)}, ${din[1].toFixed(2 )}] desired:${desired.toFixed(2)}` );
     //this.perceptronNet.showInfo();
 
     this.drawbackgroundNeu();
     this.drawSamples();
     this.currentError = this.calcError2();
-    const nsam={x:this.numEpoch,y:this.currentError};
-    this.chart.data.datasets[0].data.push(nsam);
+    const nsam = { x: this.numEpoch, y: this.currentError };
+    this.chart.data.datasets[this.currLineIndex].data.push(nsam);
     this.chart.update();
   }
 
+  /** Ejecuta el ciclo de aprendizaje hasta un tope de intentos o se llega a un error
+   * aceptable
+   * @memberof DoubleNeuroneComponent
+   */
+  public onLearnToEnd() {
+    const thats = this;
+    const ended = () =>(this.numEpoch >= 100000) || (this.currentError<this.miErrorLimit);
+
+    function cicle() {
+      thats.executeLearnCicles(400);
+      thats.drawbackgroundNeu();
+      thats.drawSamples();
+      thats.currentError = thats.calcError2();
+      const nsam = { x: thats.numEpoch, y: thats.currentError };
+      thats.chart.data.datasets[thats.currLineIndex].data.push(nsam);
+      thats.chart.update();
+    }
+    neutils.smplUntil(ended, cicle, function(err) {
+      if (err) console.error(err);
+      console.log('OK');
+    });
+  }
+
   public onTest() {
-     const tst=()=>this.numEpoch>4;
-     const iteratee=()=>console.log(this.numEpoch);
-     neutils.smplUntil(tst,iteratee,function(){console.log('ok');});
+    const tst = () => this.numEpoch > 4;
+    const iteratee = () => console.log(this.numEpoch);
+    neutils.smplUntil(tst, iteratee, function() {
+      console.log('ok');
+    });
 
     /*const thats = this;
     this.testAddDataChart();
@@ -167,12 +191,23 @@ export class DoubleNeuroneComponent implements OnInit {
   }
 
   public onTest2() {
-    console.log("onTest2()");
-    const tst=()=>this.numEpoch>4;
-     const iteratee=()=>{console.log(this.numEpoch++);}
-     neutils.smplUntil(tst,iteratee,function(){console.log('ok');});
+    console.log('onTest2()');
+    const tst = () => this.numEpoch > 4;
+    const iteratee = () => {
+      console.log(this.numEpoch++);
+    };
+    neutils.smplUntil(tst, iteratee, function() {
+      console.log('ok');
+    });
   }
 
+  public onClearGraph() {
+    this.chart.data.datasets.length = 0;
+    this.addNewLineGraph();
+    this.chart.update();
+    //this.chart.data.datasets[0].data.length = 0;
+  }
+  //#endregion
 
   public drawbackgroundNeu() {
     const imgData = this.bCanvas.context.createImageData(
@@ -220,11 +255,25 @@ export class DoubleNeuroneComponent implements OnInit {
     });
   }
 
-  protected clip(number, min, max):number {
+  protected executeLearnCicles(nTest: number) {
+    for (let i = 0; i < nTest; i++) {
+      const index = this.lastIndex++ % this.data.length;
+      const elemento: TSampleXY = this.data[index];
+      const din = [elemento.x, elemento.y];
+      const desired = this.clasify(elemento);
+      this.perceptronNet.learn(desired, din);
+    }
+    this.numEpoch += nTest;
+  }
+
+  protected clip(number, min, max): number {
     return Math.max(min, Math.min(number, max));
   }
 
-  protected drawSample( s: TSampleXY,  color: string | CanvasGradient | CanvasPattern ) {
+  protected drawSample(
+    s: TSampleXY,
+    color: string | CanvasGradient | CanvasPattern
+  ) {
     this.bCanvas.context.beginPath();
     this.bCanvas.context.rect(
       s.x * this.bCanvas.scaleX - 2,
@@ -238,17 +287,17 @@ export class DoubleNeuroneComponent implements OnInit {
     this.bCanvas.context.stroke();
   }
 
-  protected setCfg(a:any){
-    this.perceptronNet.build(2,this.netCfg.nInternals);
-    this.clasify=this.netCfg.clasify;
+  protected setCfg(a: any) {
+    this.perceptronNet.build(2, this.netCfg.nInternals);
+    this.clasify = this.netCfg.clasify;
+    this.miErrorLimit=this.netCfg.minError;
     this.reset();
   }
 
-  protected reset(){
-    this.numEpoch=0;
-    this.chart.data.datasets[0].data.length=0;
+  protected reset() {
+    this.numEpoch = 0;
+    //this.chart.data.datasets[0].data.length = 0;
   }
-
 
   protected forceValues() {
     let neu = this.perceptronNet.layer[0];
@@ -319,6 +368,7 @@ export class DoubleNeuroneComponent implements OnInit {
         datasets: [
           {
             label: 'test',
+            fillColor : this.getRandomColor(),
             data: [],
             fill: false
           }
@@ -331,7 +381,7 @@ export class DoubleNeuroneComponent implements OnInit {
         scales: {
           xAxes: [
             {
-              type:'linear',
+              type: 'linear',
               display: true
             }
           ],
@@ -341,9 +391,36 @@ export class DoubleNeuroneComponent implements OnInit {
             }
           ]
         },
-        showLines:true
+        showLines: true
       }
     });
+  }
+
+  /** Añade una nueva grafica
+   *
+   * @protected
+   * @memberof DoubleNeuroneComponent
+   */
+  protected addNewLineGraph() {
+    const col=this.getRandomColor();
+    const nDS = {
+      label: 'test',
+      borderColor: col,
+      data: [],
+      fill: false
+    };
+    //hats.chart.data.datasets[thats.currLineIndex].data.push(nsam);
+    this.chart.data.datasets.push(nDS);
+    this.currLineIndex = this.chart.data.datasets.length - 1; //Siempre escribimos en la última
+  }
+
+  getRandomColor() {
+    const letters = '0123456789ABCDEF'.split('');
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
 
   protected testAddDataChart() {
@@ -361,27 +438,25 @@ export class DoubleNeuroneComponent implements OnInit {
   }
 
   public clasifyXor(apple: TSampleXY): number {
-    let b = apple.y>apple.x;  // /
-    const c= apple.y>(1-apple.x);  // \
-    b=b?!c:c;  //xor
-    return b? 1:0;
+    let b = apple.y > apple.x; // /
+    const c = apple.y > 1 - apple.x; // \
+    b = b ? !c : c; //xor
+    return b ? 1 : 0;
   }
 
-  public clasifyCenterZone(apple:TSampleXY):number{
-    let b=false;
-    if(apple.x>0.3 && apple.x<0.7){
-      if(apple.y>0.3 && apple.y<0.7) b=true;
+  public clasifyCenterZone(apple: TSampleXY): number {
+    let b = false;
+    if (apple.x > 0.3 && apple.x < 0.7) {
+      if (apple.y > 0.3 && apple.y < 0.7) b = true;
     }
-    return b? 1:0;
+    return b ? 1 : 0;
   }
 
-  public clasifyBand(s:TSampleXY):number{
-    let b=false;
-    if(s.y>(0.2*s.x+0.2)){
-      b=s.y<(0.2*s.x+0.6);
+  public clasifyBand(s: TSampleXY): number {
+    let b = false;
+    if (s.y > 0.2 * s.x + 0.2) {
+      b = s.y < 0.2 * s.x + 0.6;
     }
-    return b? 1:0;
+    return b ? 1 : 0;
   }
-
-
 }
