@@ -10,15 +10,15 @@ import { BCanvasComponent } from "../../b-comps/b-canvas/b-canvas.component";
 import { TNeuron, TPerceptron1, FuncsTransfer } from "../../../MIA/neuronic";
 import * as neutils from "../../../MIA/neutils";
 
-import { Chart } from "chart.js";
+import { Chart } from 'chart.js';
 import { ExitMachine } from '../../../MIA/neutils';
 
 type TFClasify = (pair: TSampleXY) => number;
 
 @Component({
-  selector: "app-double-neurone",
-  templateUrl: "./double-neurone.component.html",
-  styleUrls: ["./double-neurone.component.css"]
+  selector: 'app-double-neurone',
+  templateUrl: './double-neurone.component.html',
+  styleUrls: ['./double-neurone.component.css']
 })
 export class DoubleNeuroneComponent implements OnInit {
   private lastIndex = 0;
@@ -35,10 +35,10 @@ export class DoubleNeuroneComponent implements OnInit {
   public isUnchanged = false;
 
   public FuncsClasify = [
-    { f: this.clasify1Quart, nfo: "Quadrant" },
-    { f: this.clasifyXor, nfo: "Xor Function" },
-    { f: this.clasifyCenterZone, nfo: "center Zone" },
-    { f: this.clasifyBand, nfo: "band" }
+    { f: this.clasify1Quart, nfo: 'Quadrant', tooltip:'Cuandrant' },
+    { f: this.clasifyXor, nfo: 'Xor Function', tooltip:'2 cuadrants in romboid' },
+    { f: this.clasifyCenterZone, nfo: 'center', tooltip:'Center zone' },
+    { f: this.clasifyBand, nfo: 'band', tooltip:'Central band' }
   ];
 
   public netCfg = {
@@ -52,7 +52,7 @@ export class DoubleNeuroneComponent implements OnInit {
   @ViewChild(BCanvasComponent) bCanvas: BCanvasComponent;
 
   constructor(private appleService: ApplesService) {
-    console.log("new");
+    console.log('new');
     this.clasify = this.clasify1Quart;
   }
 

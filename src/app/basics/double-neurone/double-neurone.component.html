@@ -6,21 +6,18 @@
     <div class="col border">
       <div class="row">
         <span [hidden]="isUnchanged">changed</span>
-
-        <span>Numero de neuronas:</span>
-        <input type="text" (change)="true" #inpt1>{{netCfg.v2}}
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+              <span class="input-group-text">Numero de neuronas tris:</span>
+          </div>
+          <input type="text" [(ngModel)]="netCfg.v2">
+        </div>
         <br>
-        <span>Numero de neuronas bis:</span>
-        <input type="text" [value]="netCfg.v2" (input)="netCfg.V2=$event.target.value">
-        <br>
-        <span>Numero de neuronas tris:</span>
-        <input type="text" [(ngModel)]="netCfg.v2">
-        <br>
-        <button type="button" class="btn" (click)="onSetCfg(inpt1.value)" ngbTooltip="Set network configuration">Set</button>
+        <button type="button" class="btn" (click)="onSetCfg()" ngbTooltip="Set network configuration">Set</button>
       </div>
       <div class="row">
         <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
-          <label ngbTooltip="Reaa">
+          <label ngbTooltip="{{fun.tooltip}}">
             <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
           </label>
         </ng-container>
@@ -28,7 +25,7 @@
       <div class="row">
         <div class="btn-group btn-group-toggle" data-toggle="buttons">
           <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
-            <label class="btn btn-secondary" ngbTooltip="Reaa">
+            <label class="btn btn-secondary" ngbTooltip="{{fun.tooltip}}">
               <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
             </label>
           </ng-container>
