@@ -15,21 +15,16 @@
         <br>
         <button type="button" class="btn" (click)="onSetCfg()" ngbTooltip="Set network configuration">Set</button>
       </div>
+
       <div class="row">
-        <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
-          <label ngbTooltip="{{fun.tooltip}}">
-            <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
-          </label>
-        </ng-container>
-      </div>
-      <div class="row">
-        <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <div class="btn-group btn-group-toggle" ngbRadioGroup  [(ngModel)]="netCfg.clasifyNum">
           <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
-            <label class="btn btn-secondary" ngbTooltip="{{fun.tooltip}}">
-              <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectClasify(idx)">{{fun.nfo}}
+            <label ngbButtonLabel class="btn-primary" ngbTooltip="{{fun.tooltip}}" [(ngModel)]="netCfg.clasifyNum">
+              <input ngbButton  type="radio"  [value]="idx" >{{fun.nfo}}
             </label>
           </ng-container>
         </div>
+        <pre>{{netCfg.clasifyNum}}</pre>
       </div>
       <div class="row">
         <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>

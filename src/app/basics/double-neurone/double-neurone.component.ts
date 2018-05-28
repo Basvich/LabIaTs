@@ -2,13 +2,13 @@
 /**
  * Poner funciones de relleno asyncrono y detección de fin
  */
-import { Component, OnInit, ViewChild, ElementRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 
-import { TSampleXY } from "../../dataTypes";
-import { ApplesService } from "../../apples.service";
-import { BCanvasComponent } from "../../b-comps/b-canvas/b-canvas.component";
-import { TNeuron, TPerceptron1, FuncsTransfer } from "../../../MIA/neuronic";
-import * as neutils from "../../../MIA/neutils";
+import { TSampleXY } from '../../dataTypes';
+import { ApplesService } from '../../apples.service';
+import { BCanvasComponent } from '../../b-comps/b-canvas/b-canvas.component';
+import { TNeuron, TPerceptron1, FuncsTransfer } from '../../../MIA/neuronic';
+import * as neutils from '../../../MIA/neutils';
 
 import { Chart } from 'chart.js';
 import { ExitMachine } from '../../../MIA/neutils';
@@ -31,6 +31,12 @@ export class DoubleNeuroneComponent implements OnInit {
   public currentError = 0;
   public numEpoch = 0;
 
+  modelRB1 = {
+    left: true,
+    middle: false,
+    right: false
+  };
+
 
   public isUnchanged = false;
 
@@ -43,6 +49,7 @@ export class DoubleNeuroneComponent implements OnInit {
 
   public netCfg = {
     nInternals: 2,
+    clasifyNum:0,
     clasify: this.FuncsClasify[0].f,
     v2: 4,
     minError:0.002,
