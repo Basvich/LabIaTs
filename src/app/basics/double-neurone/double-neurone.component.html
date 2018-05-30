@@ -5,10 +5,19 @@
     </div>
     <div class="col border">
       <div class="row">
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="">Numero de capas internas</span>
+          </div>
+          <input type="text" [(ngModel)]="netCfg.nInternals">
+          <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="button">Modificar</button>
+          </div>
+        </div>
         <span [hidden]="isUnchanged">changed</span>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
-              <span class="input-group-text">Numero de neuronas tris:</span>
+            <span class="input-group-text">Numero de neuronas tris:</span>
           </div>
           <input type="text" [(ngModel)]="netCfg.v2">
         </div>
@@ -17,10 +26,10 @@
       </div>
 
       <div class="row">
-        <div class="btn-group btn-group-toggle" ngbRadioGroup  [(ngModel)]="netCfg.clasifyNum">
+        <div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="netCfg.clasifyNum">
           <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
             <label ngbButtonLabel class="btn-primary" ngbTooltip="{{fun.tooltip}}" [(ngModel)]="netCfg.clasifyNum">
-              <input ngbButton  type="radio"  [value]="idx" >{{fun.nfo}}
+              <input ngbButton type="radio" [value]="idx">{{fun.nfo}}
             </label>
           </ng-container>
         </div>
@@ -53,7 +62,9 @@
           <input type="text" [(ngModel)]="netCfg.maxIteracciones">
         </div>
       </div>
-      <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-user"></span></button>
+      <button type="button" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-user"></span>
+      </button>
     </div>
   </div>
   <div class="row border">

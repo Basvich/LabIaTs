@@ -7,7 +7,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { TSampleXY } from '../../dataTypes';
 import { ApplesService } from '../../apples.service';
 import { BCanvasComponent } from '../../b-comps/b-canvas/b-canvas.component';
-import { TNeuron, TPerceptron1, FuncsTransfer } from '../../../MIA/neuronic';
+import { TNeuron, TPerceptron1, FuncsTransfer, TPerceptronn } from '../../../MIA/neuronic';
 import * as neutils from '../../../MIA/neutils';
 
 import { Chart } from 'chart.js';
@@ -52,6 +52,7 @@ export class DoubleNeuroneComponent implements OnInit {
     clasifyNum:0,
     clasify: this.FuncsClasify[0].f,
     v2: 4,
+    numLayers:1,
     minError:0.002,
     maxIteracciones:100000
   };
@@ -65,8 +66,10 @@ export class DoubleNeuroneComponent implements OnInit {
 
   ngOnInit() {
     this.getHeroes();
-    this.perceptronNet = new TPerceptron1();
-    this.perceptronNet.build(2, 2);
+    /*this.perceptronNet = new TPerceptron1();
+    this.perceptronNet.build(2, 2);*/
+    this.perceptronNet=new TPerceptronn();
+    this.perceptronNet.build(2,[2,2]);
     this.initChart();
   }
 
@@ -199,7 +202,9 @@ export class DoubleNeuroneComponent implements OnInit {
 
   public onTest2() {
     console.log('onTest2()');
-    const tst = () => this.numEpoch > 4;
+    this.onLearnStep();
+
+    const tst = () => this.numEpoch > 1;
     const iteratee = () => {
       console.log(this.numEpoch++);
     };

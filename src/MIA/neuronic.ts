@@ -1,6 +1,6 @@
-import { randomBytes } from "crypto";
-import { isNumber, isArray } from "util";
-import { forEach } from "@angular/router/src/utils/collection";
+import { randomBytes } from 'crypto';
+import { isNumber, isArray } from 'util';
+import { forEach } from '@angular/router/src/utils/collection';
 
 //import { NOTIMP } from "dns";
 
@@ -66,8 +66,8 @@ export class TNeuron {
 
   public buildFrom(fromInputs: Array<number | TNeuron>) {
     if (!fromInputs || fromInputs.length === 0)
-      throw new Error("invalid inputs");
-    const isnNums = typeof fromInputs[0] === "number";
+      throw new Error('invalid inputs');
+    const isnNums = typeof fromInputs[0] === 'number';
     this.weigths = new Array(fromInputs.length);
     for (let i = 0; i < this.weigths.length; i++) this.weigths[i] = 0;
     this.inputs = fromInputs;
@@ -121,14 +121,14 @@ export class TNeuron {
   public adjustBackProp(lek: number) {
     if (lek === 0) return;
     if (!isFinite(lek)) {
-      throw new Error("Invalid lek");
+      throw new Error('Invalid lek');
     }
     for (let i = 0; i < this.inputs.length; i++) {
       const vari = lek * this.funcGetIns(this.inputs[i]);
       const nW = this.weigths[i] + vari;
       this.weigths[i] = nW;
       if (isNaN(this.weigths[i])) {
-        throw new Error("Invalid operation");
+        throw new Error('Invalid operation');
       }
     }
     //El bias es como un peso con entrada 1
@@ -160,7 +160,7 @@ export class TNeuronalNetwork {
  * @class TPerceptron1
  */
 export class TPerceptron1 extends TNeuronalNetwork {
-  protected inputs: Array<number>;
+  public inputs: Array<number>;
   layer: Array<TNeuron>;
   derivative: Function;
   /** La neurona de salida, conectada a todas las de entrada
@@ -175,7 +175,7 @@ export class TPerceptron1 extends TNeuronalNetwork {
    * @memberof TPerceptron1
    */
   public calcY(currInputs?: Array<number>): number {
-    if (!this.inputs) throw new Error("Not initialized");
+    if (!this.inputs) throw new Error('Not initialized');
     if (currInputs)
       for (let i = 0; i < currInputs.length; i++)
         this.inputs[i] = currInputs[i];
@@ -287,7 +287,7 @@ export class TPerceptronn extends TPerceptron1 {
    * @memberof TPerceptron1
    */
   public calcY(currInputs?: Array<number>): number {
-    if (!this.inputs) throw new Error("Not initialized");
+    if (!this.inputs) throw new Error('Not initialized');
     if (currInputs)
       for (let i = 0; i < currInputs.length; i++)
         this.inputs[i] = currInputs[i];
@@ -327,6 +327,7 @@ export class TPerceptronn extends TPerceptron1 {
     for (let i = 0; i < layer1.length; i++) {
       const neu: TNeuron = layer1[i];
       const Eki = this.derivative(neu.y) * this.neuY.weigths[i] * Ek; //neu.y*(1-neu.y)*this.neuY.weigths[i]*Ek;
+      neu.errBackProp=Eki;
       neu.adjustBackProp(this.tasaAprendizage * Eki);
     }
     let layer2;
