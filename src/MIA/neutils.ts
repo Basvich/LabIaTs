@@ -139,7 +139,7 @@ export class ExitMachine extends Error {
 
     function excecuteStep(){
       try{
-        console.log('excecuteStep()');
+        //console.log('excecuteStep()');
         iteratee();
         if(!test()){
           toNextTick(excecuteStep);

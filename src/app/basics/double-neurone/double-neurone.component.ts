@@ -24,7 +24,7 @@ export class DoubleNeuroneComponent implements OnInit {
   private lastIndex = 0;
   private currLineIndex = 0;
   protected clasify: TFClasify;
-  protected miErrorLimit=0.002;
+  protected miErrorLimit=0.02;
   public data: TSampleXY[];
   public chart; // This will hold our chart info
   public perceptronNet: TPerceptron1;
@@ -53,7 +53,9 @@ export class DoubleNeuroneComponent implements OnInit {
     clasify: this.FuncsClasify[0].f,
     v2: 4,
     numLayers:1,
-    minError:0.002,
+    neuronInLayer:[2],
+    saltosCiclo:400,
+    minError:0.02,
     maxIteracciones:100000
   };
 
@@ -84,11 +86,26 @@ export class DoubleNeuroneComponent implements OnInit {
   }
 
   //#region  respuseta eventos
+
+  onSetNumLayers(){
+    this.netCfg.numLayers=this.clip(this.netCfg.numLayers,1,6);
+    const curr=this.netCfg.neuronInLayer.length;
+    if(curr===this.netCfg.numLayers) return;
+    if(curr<this.netCfg.numLayers){
+      for(let i=curr; i<this.netCfg.numLayers; i++)
+        this.netCfg.neuronInLayer.push(2);
+    }else{
+      this.netCfg.neuronInLayer.length = this.netCfg.numLayers;
+    }
+
+  }
+
   public onSetCfg(v: any) {
     console.log(v);
     console.log(this.netCfg.v2);
     //Sanitize
     this.netCfg.nInternals = this.clip(this.netCfg.nInternals, 1, 20);
+    this.netCfg.clasify = this.FuncsClasify[this.netCfg.clasifyNum].f;
     this.setCfg(this.netCfg);
     this.addNewLineGraph();
   }
@@ -153,10 +170,11 @@ export class DoubleNeuroneComponent implements OnInit {
    */
   public onLearnToEnd() {
     const thats = this;
-    const ended = () =>(this.numEpoch >= 100000) || (this.currentError<this.miErrorLimit);
-
+    console.log(`error limite actual: ${this.miErrorLimit} `);
+    const ended = () =>(this.numEpoch >= this.netCfg.maxIteracciones) || (this.currentError<this.miErrorLimit);
+    const saltos=this.netCfg.saltosCiclo;
     function cicle() {
-      thats.executeLearnCicles(400);
+      thats.executeLearnCicles(saltos);
       thats.drawbackgroundNeu();
       thats.drawSamples();
       thats.currentError = thats.calcError2();
@@ -239,13 +257,13 @@ export class DoubleNeuroneComponent implements OnInit {
       for (let x = 0; x < imgData.width; x++) {
         this.perceptronNet.inputs[0] = x * isx;
         const rC = this.perceptronNet.calcY();
-        if (rC < -0.2) {
+        if (rC < 0.3) {
           v.setInt32(index, red);
         } else {
-          if (rC > 0.2) {
+          if (rC > 0.6) {
             v.setInt32(index, blue);
           } else {
-            if (Math.abs(rC) < 0.002) v.setInt32(index, black);
+            if (Math.abs(rC-0.5) < 0.006) v.setInt32(index, black);
             else v.setInt32(index, white);
           }
         }
@@ -300,11 +318,14 @@ export class DoubleNeuroneComponent implements OnInit {
   }
 
   protected setCfg(a: any) {
-    this.perceptronNet.build(2, this.netCfg.nInternals);
+    //this.perceptronNet.build(2, this.netCfg.nInternals);
+    this.perceptronNet.build(2,this.netCfg.neuronInLayer);
     this.clasify = this.netCfg.clasify;
     this.miErrorLimit=this.netCfg.minError;
     this.reset();
   }
+
+
 
   protected reset() {
     this.numEpoch = 0;

@@ -140,16 +140,27 @@ export class TNeuron {
       const ww = 2; //2/this.weigths.length;  //sirve para emprezar con pesos normalizados
       const ofs = 1; //1/this.weigths.length;
       this.weigths.forEach((value: number, index: number, array: number[]) => {
-        array[index] = Math.random() * ww - ofs;
+        //array[index] = Math.random() * ww - ofs;
+        array[index]=TNeuronalNetwork.pseRandom()*ww-ofs;
       });
     }
-    this.bias = Math.random() * 2 - 1;
+    this.bias = TNeuronalNetwork.pseRandom()*2-1;//Math.random() * 2 - 1;
   }
 }
 
 export class TNeuronalNetwork {
-  public tasaAprendizage = 0.3;
+  public static seed = 1;
+  public tasaAprendizage = 0.15;
+
+  /**Falso random para poder hacer comparaciones */
+  public static pseRandom() {
+    const x = Math.sin(TNeuronalNetwork.seed++) * 10000;
+    return x - Math.floor(x);
+  }
+
   public showInfo() {}
+
+
 }
 
 /** Red neuronal perceptron, con 2 capas (entradas y una neurona de salida)
@@ -192,6 +203,7 @@ export class TPerceptron1 extends TNeuronalNetwork {
 
   public build(nImputs: number, nNeurons: number | Array<number>) {
     const func = transferSigmoid;
+    TNeuronalNetwork.seed=1;
     let nneus: number;
     if (isArray(nNeurons)) nneus = nNeurons[0];
     else nneus = <number>nNeurons;
@@ -258,6 +270,7 @@ export class TPerceptronn extends TPerceptron1 {
   protected layers: Array<Array<TNeuron>>;
 
   public build(nImputs: number, nNeurons: Array<number>) {
+    TNeuronalNetwork.seed=1;
     const func = transferSigmoid;
     this.derivative = sigmoidDer;
     this.inputs = new Array(nImputs);
