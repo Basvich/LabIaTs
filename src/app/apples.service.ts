@@ -7,6 +7,7 @@ import { SAMPLE1 } from './mock-data';
 @Injectable()
 export class ApplesService {
   private scale=1;
+  private seed=1;
   constructor() { }
 
   public getApples(n: number): Observable<TSampleXY[]> {
@@ -15,10 +16,17 @@ export class ApplesService {
     //return of(SAMPLE1);
   }
 
+  public getApplesXor(n:number): Observable<TSampleXY[]> {
+    const res: Array<TSampleXY>=this.builInX(n);
+    return  of(res);
+  }
+
   private buildApples(n: number): TSampleXY[] {
+    this.seed=1;
     const res: TSampleXY[]=new Array(n);
     for (let i=0; i<n; i++) {
-      res[i]= {x: 0.0+ this.scale* Math.random(), y: 0.0+this.scale *Math.random()};
+      //res[i]= {x: 0.0+ this.scale* Math.random(), y: 0.0+this.scale *Math.random()};
+      res[i]= {x: 0.0+ this.scale* this.pseRandom(), y: 0.0+this.scale * this.pseRandom()};
     }
     /*let i=0;
     for(let x=0.2;x<=0.8;x+=0.2){
@@ -27,6 +35,21 @@ export class ApplesService {
         i++;
       }
     }*/
+    return res;
+  }
+
+  pseRandom():number {
+    const x = Math.sin(this.seed++) * 10000;
+    return x - Math.floor(x);
+  }
+
+
+  private builInX(n:number):TSampleXY[]{
+    const res:TSampleXY[]=new Array(4);
+    res[0]={x:0.1,y:0.1};
+    res[1]={x:0.9,y:0.1};
+    res[2]={x:0.9,y:0.9};
+    res[3]={x:0.9,y:0.1};
     return res;
   }
 
