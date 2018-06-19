@@ -30,6 +30,7 @@ export class DoubleNeuroneComponent implements OnInit {
   public perceptronNet: TPerceptron1;
   public currentError = 0;
   public numEpoch = 0;
+  public inLearning=false;
 
   modelRB1 = {
     left: true,
@@ -56,7 +57,8 @@ export class DoubleNeuroneComponent implements OnInit {
     neuronInLayer:[2],
     saltosCiclo:400,
     minError:0.02,
-    maxIteracciones:100000
+    maxIteracciones:100000,
+    tasaAprendizage:0.2
   };
 
   @ViewChild(BCanvasComponent) bCanvas: BCanvasComponent;
@@ -170,6 +172,8 @@ export class DoubleNeuroneComponent implements OnInit {
    */
   public onLearnToEnd() {
     const thats = this;
+    this.reset();
+    this.addNewLineGraph();
     console.log(`error limite actual: ${this.miErrorLimit} `);
     const ended = () =>(this.numEpoch >= this.netCfg.maxIteracciones) || (this.currentError<this.miErrorLimit);
     const saltos=this.netCfg.saltosCiclo;

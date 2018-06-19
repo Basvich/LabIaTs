@@ -23,12 +23,6 @@
           </div>
 
         <span [hidden]="isUnchanged">changed</span>
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text">Numero de neuronas tris:</span>
-          </div>
-          <input type="text" [(ngModel)]="netCfg.v2">
-        </div>
         <br>
         <button type="button" class="btn" (click)="onSetCfg()" ngbTooltip="Set network configuration">Set</button>
       </div>
@@ -48,20 +42,19 @@
         <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">Test</button>
         <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">Learn 100</button>
         <button type="button" class="btn" (click)="onLearnToEnd()" ngbTooltip="Learn">Learn 2 End</button>
+        <button type="button" class="btn btn-danger" (click)="onStopLearn()" ngbTooltip="Learn">Stop</button>
       </div>
       <div class="row">
-        <span>numEpoch:{{numEpoch}} Error:{{currentError | number}}</span>
-        <br>
-        <span>Numero de neuronas tris:</span>
-        <input type="text" [(ngModel)]="netCfg.v2">
+        num epoch:<span class="badge badge-primary">{{numEpoch}} </span>
+        <span class="badge badge-primary">Error:{{currentError | number}}</span>
       </div>
       <div class="row border">
-        <span>Condiciones fin</span>
+        <div class="panel-heading">Panel Heading</div>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">Mínimo valor</span>
           </div>
-          <input type="text" [(ngModel)]="netCfg.minError">
+          <input type="text" step="0.005" [(ngModel)]="netCfg.minError">
         </div>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
@@ -74,6 +67,12 @@
             <span class="input-group-text" id="basic-addon1">Iteracciones en ciclo</span>
           </div>
           <input type="number" [(ngModel)]="netCfg.saltosCiclo">
+        </div>
+        <div class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">tasa aprendizaje</span>
+          </div>
+          <input type="number" step="0.1" [(ngModel)]="netCfg.tasaAprendizage" ngbTooltip="Multiplicador sobre el error">
         </div>
       </div>
       <button type="button" class="btn btn-default btn-lg">
