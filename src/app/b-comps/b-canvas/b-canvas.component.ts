@@ -24,8 +24,8 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
 
   ngOnInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    //canvasEl.width = this.width;
-    //canvasEl.height = this.height;
+    canvasEl.width = this.width;
+    canvasEl.height = this.height;
   }
 
   ngAfterViewInit() {

@@ -1,55 +1,78 @@
 <div class="container">
   <div class="row border-primary">
     <div class="col border">
-      <app-b-canvas style="height: 100%"></app-b-canvas>
+      <div class="card">
+        <div class="card-header">Muestra y ajuste</div>
+        <div class="card-body">
+          <div class="myMap">
+            <app-b-canvas></app-b-canvas>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col border">
+      <!--topología-->
       <div class="row">
-        <div class="input-group input-group-sm mb-3">
+        <h3>Topología</h3>
+        <div class="input-group input-group-sm">
           <div class="input-group-prepend">
             <span class="input-group-text" id="">Numero de capas internas</span>
           </div>
-          <input type="number" [(ngModel)]="netCfg.numLayers">
+          <input type="number" [(ngModel)]="netCfg.numLayers" class="col-3">
           <div class="input-group-append">
-            <button class="btn btn-outline-secondary" type="button" (click)="onSetNumLayers()">Modificar</button>
+            <button class="btn btn-outline-secondary" type="button" ngbTooltip="Numero de capas internas" (click)="onSetNumLayers()">Modificar</button>
           </div>
         </div>
-
-          <div *ngFor="let num of netCfg.neuronInLayer; let idx = index" class="input-group input-group-sm mb-3">
-            <div class="input-group-prepend">
-              <span class="input-group-text" id="inputGroup-sizing-sm">Layer {{idx}}</span>
-            </div>
-            <input type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" [(ngModel)]="netCfg.neuronInLayer[idx]">
+        <div *ngFor="let num of netCfg.neuronInLayer; let idx = index" class="input-group input-group-sm mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-sm">Layer {{idx}}</span>
           </div>
-
-        <span [hidden]="isUnchanged">changed</span>
+          <input type="number" class="form-control col-3" aria-label="Small" ngbTooltip="Numero de neuronas en la capa {{idx}}" aria-describedby="inputGroup-sizing-sm"
+            [(ngModel)]="netCfg.neuronInLayer[idx]">
+          <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon2">neuronas</span>
+          </div>
+        </div>
+        <span [hidden]="isUnchanged">*</span>
         <br>
-        <button type="button" class="btn" (click)="onSetCfg()" ngbTooltip="Set network configuration">Set</button>
+        <button type="button" class="btn" (click)="onSetCfg()" ngbTooltip="Establecer la topología">Modificar</button>
       </div>
 
       <div class="row">
-        <div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="netCfg.clasifyNum">
-          <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
-            <label ngbButtonLabel class="btn-primary" ngbTooltip="{{fun.tooltip}}" [(ngModel)]="netCfg.clasifyNum">
-              <input ngbButton type="radio" [value]="idx">{{fun.nfo}}
-            </label>
-          </ng-container>
+        <div class="card">
+          <div class="card-header">Tipo de datos para test</div>
+          <div class="card-body">
+            <h4 class="card-title">Tipo de datos para test</h4>
+            <div class="btn-group btn-group-toggle" ngbRadioGroup [(ngModel)]="netCfg.clasifyNum">
+              <ng-container *ngFor="let fun of FuncsClasify; let idx = index; let first = first">
+                <label ngbButtonLabel class="btn-primary" ngbTooltip="{{fun.tooltip}}" [(ngModel)]="netCfg.clasifyNum">
+                  <input ngbButton type="radio" [value]="idx">{{fun.nfo}}
+                </label>
+              </ng-container>
+            </div>
+            <pre>{{netCfg.clasifyNum}}</pre>
+          </div>
         </div>
-        <pre>{{netCfg.clasifyNum}}</pre>
+        <!-- </div> -->
+        <!--  <div class="row"> -->
+        <div class="card">
+          <div class="card-header">Accion a realizar</div>
+          <div class="card-body">
+            <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
+            <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">Test</button>
+            <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">Learn 100</button>
+            <button type="button" class="btn" (click)="onLearnToEnd()" ngbTooltip="Learn">Learn 2 End</button>
+            <button type="button" class="btn btn-danger" (click)="abortLearning=true;" ngbTooltip="Learn">Stop</button>
+          </div>
+        </div>
       </div>
       <div class="row">
-        <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
-        <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">Test</button>
-        <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">Learn 100</button>
-        <button type="button" class="btn" (click)="onLearnToEnd()" ngbTooltip="Learn">Learn 2 End</button>
-        <button type="button" class="btn btn-danger" (click)="onStopLearn()" ngbTooltip="Learn">Stop</button>
-      </div>
-      <div class="row">
-        num epoch:<span class="badge badge-primary">{{numEpoch}} </span>
+        num epoch:
+        <span class="badge badge-primary">{{numEpoch}} </span>
         <span class="badge badge-primary">Error:{{currentError | number}}</span>
       </div>
       <div class="row border">
-        <div class="panel-heading">Panel Heading</div>
+        <div class="panel-heading">Configuración aprendizaje</div>
         <div class="input-group input-group-sm mb-3">
           <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">Mínimo valor</span>

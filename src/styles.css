@@ -57,6 +57,12 @@ nav a.active {
   color: #039be5;
 }
 
+.myMap {
+  width: 200px;
+  height: 200px;
+}
+
+
 /* everywhere else */
 * {
   font-family: Arial, Helvetica, sans-serif;

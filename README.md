@@ -1,4 +1,24 @@
+
+
+
 # LabIaTs
+
+## Para poder probarlo
+  - Instalar node
+  - Instalar ng-cli
+  - Colonar en un directorio este código
+  - Actualizar con npm update desde el propio directorio donde se clonó
+  - Ejecutar ng serve
+  - Desde visual code, lanzar el chrome (u otro) con f5
+  - Probar Perceptron Multicapa. 
+  
+  Botón Learn 2 end realiza el aprendizaje. 
+
+
+
+## Resto readme original  
+
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
 

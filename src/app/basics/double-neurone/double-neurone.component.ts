@@ -31,6 +31,7 @@ export class DoubleNeuroneComponent implements OnInit {
   public currentError = 0;
   public numEpoch = 0;
   public inLearning=false;
+  public abortLearning=false;
 
   modelRB1 = {
     left: true,
@@ -102,6 +103,7 @@ export class DoubleNeuroneComponent implements OnInit {
 
   }
 
+
   public onSetCfg(v: any) {
     console.log(v);
     console.log(this.netCfg.v2);
@@ -172,7 +174,10 @@ export class DoubleNeuroneComponent implements OnInit {
    */
   public onLearnToEnd() {
     const thats = this;
+    this.abortLearning=false;
     this.reset();
+    this.netCfg.clasify = this.FuncsClasify[this.netCfg.clasifyNum].f;
+    this.clasify=this.netCfg.clasify;
     this.addNewLineGraph();
     console.log(`error limite actual: ${this.miErrorLimit} `);
     const ended = () =>(this.numEpoch >= this.netCfg.maxIteracciones) || (this.currentError<this.miErrorLimit);
@@ -185,6 +190,9 @@ export class DoubleNeuroneComponent implements OnInit {
       const nsam = { x: thats.numEpoch, y: thats.currentError };
       thats.chart.data.datasets[thats.currLineIndex].data.push(nsam);
       thats.chart.update();
+      if(thats.abortLearning){
+        throw new Error('Aborted');
+      }
     }
     neutils.smplUntil(ended, cicle, function(err) {
       if (err) console.error(err);
@@ -333,6 +341,7 @@ export class DoubleNeuroneComponent implements OnInit {
 
   protected reset() {
     this.numEpoch = 0;
+
     //this.chart.data.datasets[0].data.length = 0;
   }
 
