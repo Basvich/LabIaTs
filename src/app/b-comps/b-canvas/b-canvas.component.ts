@@ -16,8 +16,8 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
   @ViewChild('idcanvas') public canvas: ElementRef;
 
   // setting a width and height for the canvas
-  @Input() public width = 200;
-  @Input() public height = 200;
+  @Input() public width = 300;
+  @Input() public height = 300;
   @Input() public maxX = 1;
   @Input() public maxy = 1;
   constructor() { }

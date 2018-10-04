@@ -6,7 +6,7 @@
 ## Para poder probarlo
   - Instalar node
   - Instalar ng-cli
-  - Colonar en un directorio este código
+  - Clonar en un directorio este código
   - Actualizar con npm update desde el propio directorio donde se clonó
   - Ejecutar ng serve
   - Desde visual code, lanzar el chrome (u otro) con f5

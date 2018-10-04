@@ -105,6 +105,7 @@ export class DoubleNeuroneComponent implements OnInit {
 
 
   public onSetCfg(v: any) {
+    this.isUnchanged=true;
     console.log(v);
     console.log(this.netCfg.v2);
     //Sanitize
