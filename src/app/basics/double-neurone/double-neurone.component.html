@@ -1,6 +1,6 @@
 <div class="container">
   <div class="row border-primary">
-    <div class="col border">
+    <div class="col col-md-8">
       <div class="card">
         <div class="card-header text-center">Muestra y ajuste</div>
         <div class="card-body">
@@ -38,11 +38,11 @@
         </div>
       </div>
     </div>
-    <div class="col border">
+    <div class="col col-md-4">
       <!--topología-->
-      <div class="row">
+      <div class="row border-success">
         <div class="card">
-          <div class="card-header">Topología</div>
+          <div class="card-header">Topología<span [hidden]="isUnchanged">*</span></div>
           <div class="card-body">
             <div class="input-group input-group-sm">
               <div class="input-group-prepend">
@@ -53,7 +53,7 @@
                 <button class="btn btn-outline-secondary" type="button" ngbTooltip="Numero de capas internas" (click)="onSetNumLayers()">Modificar</button>
               </div>
             </div>
-            <span [hidden]="isUnchanged">*</span>
+
             <div *ngFor="let num of netCfg.neuronInLayer; let idx = index" class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text" id="inputGroup-sizing-sm">Layer {{idx}}</span>
@@ -69,16 +69,10 @@
             <button type="button" class="btn btn-primary btn-block" (click)="onSetCfg()" ngbTooltip="Establecer la topología">Establecer</button>
           </div>
         </div>
-
-
         <br>
-
       </div>
-
-      <div class="row">
-
-        <!-- </div> -->
-        <!--  <div class="row"> -->
+      <!--acción a realizar-->
+      <div class="row  border-success">
         <div class="card">
           <div class="card-header">Accion a realizar</div>
           <div class="card-body">
@@ -97,43 +91,46 @@
         <span class="badge badge-primary">Error:{{currentError | number}}</span>
       </div>
       <div class="row border">
-        <div class="panel-heading">Configuración aprendizaje</div>
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Mínimo valor</span>
-          </div>
-          <input type="text" step="0.005" [(ngModel)]="netCfg.minError">
+
+          <div class="card">
+            <div class="card-header">Configuración aprendizaje</div>
+            <div class="card-body">
+              <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">Mínimo valor</span>
+                </div>
+                <input type="text" step="0.005" [(ngModel)]="netCfg.minError">
+              </div>
+              <div class="input-group input-group-sm mb-12 no-gutters">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">Maximas iteracciones</span>
+                </div>
+                <input type="number" step="10000" [(ngModel)]="netCfg.maxIteracciones">
+              </div>
+              <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">Iteracciones en ciclo</span>
+                </div>
+                <input type="number" step="50" [(ngModel)]="netCfg.saltosCiclo">
+              </div>
+              <div class="input-group input-group-sm mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">tasa aprendizaje</span>
+                </div>
+                <input type="number" step="0.1" [(ngModel)]="netCfg.tasaAprendizage" ngbTooltip="Multiplicador sobre el error">
+              </div>
+            </div>
+          </div >
+
+      </div>
+      <div class="row border">
+        <div class="col-8 border">
+          <!--<canvas id="canvaschart">{{ chart }}</canvas>-->
         </div>
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Maximas iteracciones</span>
-          </div>
-          <input type="number" [(ngModel)]="netCfg.maxIteracciones">
-        </div>
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">Iteracciones en ciclo</span>
-          </div>
-          <input type="number" [(ngModel)]="netCfg.saltosCiclo">
-        </div>
-        <div class="input-group input-group-sm mb-3">
-          <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon1">tasa aprendizaje</span>
-          </div>
-          <input type="number" step="0.1" [(ngModel)]="netCfg.tasaAprendizage" ngbTooltip="Multiplicador sobre el error">
+        <div class="col border">
+          <button type="button" class="btn" (click)="onClearGraph()" ngbTooltip="Clear all graphics">clear</button>
         </div>
       </div>
-      <button type="button" class="btn btn-default btn-lg">
-        <span class="glyphicon glyphicon-user"></span>
-      </button>
-    </div>
-  </div>
-  <div class="row border">
-    <div class="col-8 border">
-      <!--<canvas id="canvaschart">{{ chart }}</canvas>-->
-    </div>
-    <div class="col border">
-      <button type="button" class="btn" (click)="onClearGraph()" ngbTooltip="Clear all graphics">clear</button>
     </div>
   </div>
 </div>
