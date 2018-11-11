@@ -53,6 +53,7 @@ export class DoubleNeuroneComponent implements OnInit {
     nInternals: 2,
     clasifyNum:0,
     clasify: this.FuncsClasify[0].f,
+    numSamples:50,
     v2: 4,
     numLayers:1,
     neuronInLayer:[2],
@@ -65,11 +66,12 @@ export class DoubleNeuroneComponent implements OnInit {
   @ViewChild(BCanvasComponent) bCanvas: BCanvasComponent;
 
   constructor(private appleService: ApplesService) {
-    console.log('new');
+    console.log('new DoubleNeuroneComponent');
     this.clasify = this.clasify1Quart;
   }
 
   ngOnInit() {
+    console.log('nfOnInit()');
     this.getHeroes();
     /*this.perceptronNet = new TPerceptron1();
     this.perceptronNet.build(2, 2);*/
@@ -79,7 +81,8 @@ export class DoubleNeuroneComponent implements OnInit {
   }
 
   getHeroes(): void {
-    this.appleService.getApples(48).subscribe(apples => (this.data = apples));
+
+    this.appleService.getApples(this.netCfg.numSamples).subscribe(apples => (this.data = apples));
     /* this.data = [
       { x: 0, y: 0 },
       { x: 0, y: 1 },
@@ -101,6 +104,14 @@ export class DoubleNeuroneComponent implements OnInit {
       this.netCfg.neuronInLayer.length = this.netCfg.numLayers;
     }
 
+  }
+
+  public onReloadSamples(){
+    this.bCanvas.clear();
+    this.getHeroes();
+    this.netCfg.clasify = this.FuncsClasify[this.netCfg.clasifyNum].f;
+    this.clasify = this.netCfg.clasify;
+    this.drawSamples();
   }
 
 

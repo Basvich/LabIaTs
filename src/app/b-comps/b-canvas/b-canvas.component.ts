@@ -58,4 +58,9 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
      this.context.stroke();
   }
 
+  public clear(){
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    this.context.clearRect(0, 0, canvasEl.width, canvasEl.height);
+  }
+
 }
