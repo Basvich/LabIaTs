@@ -1,17 +1,29 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <div class="page-header">
-    <h1>Welcome to {{ title }}</h1>
-    <h2>With Angular & Bootstrap</h2>
-  </div>
-  <!-- <img width="100" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg=="> -->
-</div>
-<!--menú de navegación, sin href-->
-<nav class="nav nav-tabs">
-  <a class="nav-link active" [routerLink]="['/']">Inicio</a>
-  <!--<a class="nav-link active"  [routerLink]="['/login']">Log In</a>-->
-  <a class="nav-link active" [routerLink]="['/basics']">Perceptron</a>
-  <a class="nav-link active" [routerLink]="['/contacto']">Contacto</a>
-</nav>
-<!--Este componente nativo hace que el enrutador cargue una página dinámicamente-->
-<router-outlet></router-outlet>
+
+<!--parte rpincipal que vemos-->
+  <!-- <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Bootstrap Sidebar</h3>
+        </div>
+     </nav> -->
+  <!--menú de navegación, sin href-->
+
+  <nav class="navbar navbar-expand-md  navbar-light bg-dark">
+    <a class="navbar-brand" href="#">Lab IA TS</a>
+    <div class="collapse navbar-collapse">
+      <!--<a class="navbar-brand">IA Lab</a>-->
+      <ul class="nav navbar-nav"  routerLinkActive="active">
+        <li class="nav-item">
+          <a class="nav-link disabled" [routerLink]="['/']">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/basics']" placement="right"  ngbTooltip="Red neuronal tipo perceptrón">Perceptron</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" [routerLink]="['/contacto']">Contacto</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!--Este componente nativo hace que el enrutador cargue una página dinámicamente-->
+  <router-outlet></router-outlet>
+

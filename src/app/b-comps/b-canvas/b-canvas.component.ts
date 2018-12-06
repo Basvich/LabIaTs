@@ -16,16 +16,16 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
   @ViewChild('idcanvas') public canvas: ElementRef;
 
   // setting a width and height for the canvas
-  @Input() public width = 200;
-  @Input() public height = 200;
+  @Input() public width = 300;
+  @Input() public height = 300;
   @Input() public maxX = 1;
   @Input() public maxy = 1;
   constructor() { }
 
   ngOnInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
-    //canvasEl.width = this.width;
-    //canvasEl.height = this.height;
+    canvasEl.width = this.width;
+    canvasEl.height = this.height;
   }
 
   ngAfterViewInit() {
@@ -56,6 +56,11 @@ export class BCanvasComponent implements OnInit, AfterViewInit  {
      this.context.beginPath();
      this.context.arc(x2, y2, 2, 0, Math.PI);
      this.context.stroke();
+  }
+
+  public clear(){
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    this.context.clearRect(0, 0, canvasEl.width, canvasEl.height);
   }
 
 }
