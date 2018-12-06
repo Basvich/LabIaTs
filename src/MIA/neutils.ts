@@ -14,8 +14,8 @@ export type ISImpleProcessStatus<T> = (dataStatus: any, callback: ISImpleProcces
   */
  export function toNextTick(func: Function) {
   //if (window.proc
-  if (window.setImmediate) {
-    window.setImmediate(func);
+  if ((<any>(window)).setImmediate) {
+    (<any>window).setImmediate(func);
   } else {
     setTimeout(func, 0);
   }
