@@ -1,0 +1,181 @@
+<div class="container">
+  <div class="row">
+    <div class="col col-md-8">
+      <div class="card">
+        <div class="card-header">Muestra para el aprendizaje</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="myMap " id="myMap">
+                <app-b-canvas name="miAppCanvas1"></app-b-canvas>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card text-center">
+                <div class="card-header">Patron test</div>
+                <div class="card-body">
+                  <div class="input-group w-100 input-group-sm">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon2">N. Samples</span>
+                    </div>
+                    <input type="number" class="form-control" step="5" min="10" max="150" [(ngModel)]="netCfg.numSamples" />
+                  </div>
+                  <div class="btn-group btn-group-toggle btn-group-vertical w-100" ngbRadioGroup [(ngModel)]="netCfg.clasifyNum">
+                    <ng-container *ngFor="
+                        let fun of FuncsClasify;
+                        let idx = index;
+                        let first = first
+                      ">
+                      <label ngbButtonLabel ngDefaultControl class="btn-info  mx-auto" ngbTooltip="{{fun.tooltip}}" [(ngModel)]="netCfg.clasifyNum">
+                        <input ngbButton type="radio" [value]="idx" />{{fun.nfo}}
+                      </label>
+                    </ng-container>
+                  </div>
+                  <button class="btn btn-outline-secondary" type="button" ngbTooltip="Recarga la muestra" (click)="onReloadSamples()">
+                    Modificar
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">Error según aprendizaje</div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <canvas id="canvaschart">{{ chart }}</canvas>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col">
+              num epoch: <span class="badge badge-primary">{{numEpoch}} </span>
+            </div>
+            <div class="col">
+              Error: <span class="badge badge-primary">{{currentError | number}}</span>
+            </div>
+            <div class="col">
+              <button type="button" class="btn" (click)="onClearGraph()" ngbTooltip="Clear all graphics">
+                clear
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Columna derecha configuración -->
+    <div class="col col-md-4">
+      <!-- topología -->
+      <div class="row">
+        <div class="card w-100">
+          <div class="card-header">Topología</div>
+          <div class="card-body">
+            <div class="input-group input-group-sm">
+              <div class="input-group-prepend ">
+                <span class="input-group-text">Num. capas internas</span>
+              </div>
+              <input type="number" class="form-control" [(ngModel)]="netCfg.numLayers" min="1" max="8" />
+              <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" ngbTooltip="Numero de capas internas" (click)="onSetNumLayers()">
+                  Modificar
+                </button>
+              </div>
+            </div>
+            <span class="badge badge-secondary">Neuronas por cada capa:</span>
+            <div class="row" *ngFor="let num of netCfg.neuronInLayer; let idx = index">
+              <div class="col">
+                <div class="input-group input-group-sm w-75 mx-auto">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">Layer {{ idx }}</span>
+                  </div>
+                  <input type="number" class="form-control " aria-label="Small" id="nc{{idx}}" ngbTooltip="Numero de neuronas en la capa {{idx}}" aria-describedby="inputGroup-sizing-sm" [(ngModel)]="netCfg.neuronInLayer[idx]" />
+                  <div class="input-group-append">
+                    <span class="input-group-text" id="basic-addon2">neuronas</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer text-center">
+            <button type="button" class="btn btn-primary btn-block" (click)="onSetCfg()" ngbTooltip="Establecer la topología">
+              Establecer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- acción a realizar -->
+      <div class="row">
+        <div class="card">
+          <div class="card-header">Accion a realizar</div>
+          <div class="card-body">
+            <button type="button" class="btn btn-primary" (click)="onLearnToEnd()" ngbTooltip="Learn">
+              Learn 2 End
+            </button>
+            <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">
+              Learn step
+            </button>
+            <button type="button" class="btn" (click)="onTest2()" ngbTooltip="Test">
+              Test
+            </button>
+            <button type="button" class="btn" (click)="onLearnStepX100()" ngbTooltip="Test">
+              Learn 100
+            </button>
+
+            <button type="button" class="btn btn-danger" (click)="abortLearning = true" ngbTooltip="Learn">
+              Stop
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Configuración aprendizaje -->
+      <div class="row">
+        <div class="card">
+          <div class="card-header">Configuración aprendizaje</div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <div class="input-group w-100 input-group-sm">
+                  <div class="input-group-prepend ">
+                    <span class="input-group-text" id="basic-addon1">Mín. valor</span>
+                  </div>
+                  <input type="number" class="form-control" step="0.005" [(ngModel)]="netCfg.minError" />
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="input-group w-100 input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon2">Max. iteracciones</span>
+                  </div>
+                  <input type="number" class="form-control" step="10000" [(ngModel)]="netCfg.maxIteracciones" />
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Iterac/ciclo</span>
+                  </div>
+                  <input type="number" class="form-control" step="50" [(ngModel)]="netCfg.saltosCiclo" />
+                </div>
+              </li>
+              <li class="list-group-item">
+                <div class="input-group input-group-sm">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon4">tasa aprendizaje</span>
+                  </div>
+                  <input type="number" class="form-control" step="0.1" [(ngModel)]="netCfg.tasaAprendizage" ngbTooltip="Multiplicador sobre el error" />
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-8 border">
+          <!-- <canvas id="canvaschart">{{ chart }}</canvas> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

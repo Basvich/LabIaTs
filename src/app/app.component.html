@@ -1,0 +1,29 @@
+
+<!--parte rpincipal que vemos-->
+  <!-- <nav id="sidebar">
+        <div class="sidebar-header">
+            <h3>Bootstrap Sidebar</h3>
+        </div>
+     </nav> -->
+  <!--menú de navegación, sin href-->
+
+  <nav class="navbar navbar-expand-md  navbar-light bg-dark">
+    <a class="navbar-brand" href="#">Lab IA TS</a>
+    <div class="collapse navbar-collapse">
+      <!--<a class="navbar-brand">IA Lab</a>-->
+      <ul class="nav navbar-nav"  routerLinkActive="active">
+        <li class="nav-item">
+          <a class="nav-link disabled" [routerLink]="['/']">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="['/basics']" placement="right"  ngbTooltip="Red neuronal tipo perceptrón">Perceptron</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" [routerLink]="['/contacto']">Contacto</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <!--Este componente nativo hace que el enrutador cargue una página dinámicamente-->
+  <router-outlet></router-outlet>
+

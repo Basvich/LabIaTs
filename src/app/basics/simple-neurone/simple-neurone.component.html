@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="row">
+    <div class="col border">
+      <div class="row border">
+        <!--<canvas id="canvas" style="border: 1px gray solid; float: left"></canvas>-->
+        <app-b-canvas style="height: 100%"></app-b-canvas>
+      </div>
+      <!-- <div class="row">
+        <li *ngFor="let sample of data">
+        <span>{{sample.x}}</span>
+      </li>
+      </div>-->
+    </div>
+    <div class="col border">
+      <div class="row">
+        <button class="btn" (click)="onReset()">reset</button>
+      </div>
+      <div class="row">
+        Funcion:
+        <div>
+          <!--<label *ngFor="let fun of functionsType">
+             <input ngbButton type="radio" [value]="1" (click)="onSelectFn(1)"> eoo {{fun.nfo}}
+          </label>-->
+
+        </div>
+      </div>
+      <div class="row border">
+        <ng-container *ngFor="let fun of functionsType; let idx = index; let first = first">
+          <label ngbTooltip="Reaa" >
+            <input type="radio" name="funcs" [value]="idx" [checked]="first" (click)="onSelectFn(idx)">{{fun.nfo}}
+          </label>
+        </ng-container>
+      </div>
+      <div class="row">
+        <button type="button" class="btn btn-primary" (click)="onTest1()">test2</button>
+        <br/>
+        <button type="button" class="btn" (click)="onDrawbackground()">show regions</button>
+        <br/>
+        <button type="button" class="btn" (click)="onLearnStep()" ngbTooltip="Realiza un paso de aprendizaje">Learn step</button>
+        <br/>
+        <span>Error:{{currentError | number}}</span>
+
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+      <dl class="row">
+          <dt class="col-sm-3">Description lists</dt>
+          <dd class="col-sm-9">A description list is perfect for defining terms.</dd>
+          <dt class="col-sm-3">Description lists 2</dt>
+          <dd class="col-sm-9">eso es.</dd>
+        </dl>
+  </div>
+</div>
