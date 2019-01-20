@@ -3,24 +3,27 @@
 
 # LabIaTs
 
+Este programa es simplemente un prototipo como prueba de concepto para usar typescript como lenguaje para probar a realizar una red neuronal, multicapa tipo perceptron que pueda realizar aplrendizaje con ciertos ejemplos simples.
+Tecnologías, u ejemplos de código que se pueden encontrar:
+  - Montado sobre una aplicación Angular 7. Enlace con el modelo de la red neuronal.
+  - Uso de bootstrap para el aspecto básico de botones y componentes.
+  - Usar un Canvas para pintar directamente.
+  - Uso de chart.js para mostrar datos en tiempo real del aprendizaje.
+  
+La realización de este codigo sirve para fijar ideas acerca del perceptron multicapa, y de conceptos asociados acerca del perceptron multicapa. Accesoriamente probar cosas de bootstrap, angular y chart.js
+
+
 ## Para poder probarlo
-  - Instalar node
-  - Instalar ng-cli
+  - Instalar node (https://nodejs.org/es/) V>=9.11
+  - Instalar ng-cli (https://cli.angular.io/) V>= 7.1 ; Version de angular actual 7.1
   - Clonar en un directorio este código
-  - Actualizar con npm update desde el propio directorio donde se clonó
+  - Actualizar con npm desde el propio directorio donde se clonó
   - Ejecutar ng serve
   - Desde visual code, lanzar el chrome (u otro) con f5
   - Probar Perceptron Multicapa. 
-  
-  Botón Learn 2 end realiza el aprendizaje. 
+ 
 
 
-
-## Resto readme original  
-
-
-
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
 
 ## Development server
 
